@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheBlackForestSprint2", "TheBlackForestSprint2\TheBlackForestSprint2.csproj", "{6879B11C-3E2A-4DF6-A5F2-B4CFB7EEFACB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6879B11C-3E2A-4DF6-A5F2-B4CFB7EEFACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6879B11C-3E2A-4DF6-A5F2-B4CFB7EEFACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6879B11C-3E2A-4DF6-A5F2-B4CFB7EEFACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6879B11C-3E2A-4DF6-A5F2-B4CFB7EEFACB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
