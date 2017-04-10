@@ -502,6 +502,7 @@ namespace TheBlackForest
 
         public void DisplayTraineeInfo()
         {
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
             DisplayGamePlayScreen("Trainee Information", Text.TraineeInfo(_gameTrainee), ActionMenu.MainMenu, "");
         }
 
@@ -601,6 +602,12 @@ namespace TheBlackForest
                 DisplayGamePlayScreen("Look at a Object", "It appears there are no game objects here.", ActionMenu.MainMenu, "");
             }
             return lessonObjectId;
+        }
+
+        public void DisplayCurrentLocationInfo()
+        {
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(currentForestTimeLocation), ActionMenu.MainMenu, "");
         }
 
         public int DisplayGetTraineeObjectToPickUp()

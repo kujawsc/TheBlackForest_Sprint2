@@ -132,45 +132,40 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayTraineeInfo();
                         break;
 
-                    case TraineeAction.ListBlackForestLocations:
-                        _gameConsoleView.DisplayListOfForestTimeLocations();
-                        break;
-
                     case TraineeAction.LookAround:
                         _gameConsoleView.DisplayLookAround();
                         break;
 
-                    case TraineeAction.PickUp:
-                        PickUpAction();
-                        break;
-
                     case TraineeAction.Travel:
-                        //
-                        // Get new location choice and update the current location property
-                        //
-                        _gameTrainee.BlackForestTimeLocationID = _gameConsoleView.DisplayGetNextForestTimeLocation();
-                        _currentLocation = _gameBlackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
-
-                        //
-                        // Set the game play screen to the current location info format
-                        //
-                        _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(_currentLocation), ActionMenu.MainMenu, "");
+                        TraineAction();
                         break;
 
                     case TraineeAction.TraineeLocationVisited:
                         _gameConsoleView.DisplayLocationsVisited();
                         break;
 
-                    case TraineeAction.ListLessonObjects:
-                        _gameConsoleView.DisplayListOfAllLessonObjects();
-                        break;
-
                     case TraineeAction.LookAt:
                         LookAtAction();
                         break;
 
+                    case TraineeAction.PickUp:
+                        PickUpAction();
+                        break;
+
                     case TraineeAction.PutDown:
                         PutDownAction();
+                        break;
+
+                    case TraineeAction.TraineeInventory:
+                        _gameConsoleView.DisplayTraineeInventory();
+                        break;
+
+                    case TraineeAction.ListBlackForestLocations:
+                        _gameConsoleView.DisplayListOfForestTimeLocations();
+                        break;
+
+                    case TraineeAction.ListLessonObjects:
+                        _gameConsoleView.DisplayListOfAllLessonObjects();
                         break;
 
                     case TraineeAction.AdminMenu:
@@ -185,10 +180,6 @@ namespace TheBlackForest
 
                     case TraineeAction.Exit:
                         _playingGame = false;
-                        break;
-
-                    case TraineeAction.TraineeInventory:
-                        _gameConsoleView.DisplayTraineeInventory();
                         break;
 
                     default:
@@ -286,6 +277,20 @@ namespace TheBlackForest
             //
             _gameConsoleView.DisplayConfirmTraineeObjectRemovedFromInventory(traineeObject);
 
+        }
+
+        private void TraineAction()
+        {
+            //
+            // get new location choice and update the current location property
+            //                        
+            _gameTrainee.BlackForestTimeLocationID = _gameConsoleView.DisplayGetNextForestTimeLocation();
+            _currentLocation = _gameBlackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+
+            //
+            // display the new space-time location info
+            //
+            _gameConsoleView.DisplayCurrentLocationInfo();
         }
 
         private void LookAtAction()
