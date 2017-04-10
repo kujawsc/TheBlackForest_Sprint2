@@ -55,6 +55,13 @@ namespace TheBlackForest
             _gameConsoleView = new ConsoleView(_gameTrainee, _gameBlackForest);
             _playingGame = true;
 
+            //
+            // Add initial items to the trainee inventory
+            //
+
+            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetLessonObjectById(8) as TraineeObject);
+            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetLessonObjectById(9) as TraineeObject);
+
             Console.CursorVisible = false;
         }
 
@@ -105,8 +112,14 @@ namespace TheBlackForest
                 //
                 // get next game action from player
                 //
-                traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
-
+                if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.MainMenu)
+                {
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                }
+                else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.AdminMenu)
+                {
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                }
                 //
                 // choose an action based on the player's menu choice
                 //
@@ -127,6 +140,10 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayLookAround();
                         break;
 
+                    case TraineeAction.PickUp:
+                        PickUpAction();
+                        break;
+
                     case TraineeAction.Travel:
                         //
                         // Get new location choice and update the current location property
@@ -144,8 +161,34 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayLocationsVisited();
                         break;
 
+                    case TraineeAction.ListLessonObjects:
+                        _gameConsoleView.DisplayListOfAllLessonObjects();
+                        break;
+
+                    case TraineeAction.LookAt:
+                        LookAtAction();
+                        break;
+
+                    case TraineeAction.PutDown:
+                        PutDownAction();
+                        break;
+
+                    case TraineeAction.AdminMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.AdminMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Admin Menu", "Select an operation from the menu.", ActionMenu.AdminMenu, "");
+                        break;
+
+                    case TraineeAction.RetrunToMainMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.MainMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(_currentLocation), ActionMenu.MainMenu, "");
+                        break;
+
                     case TraineeAction.Exit:
                         _playingGame = false;
+                        break;
+
+                    case TraineeAction.TraineeInventory:
+                        _gameConsoleView.DisplayTraineeInventory();
                         break;
 
                     default:
@@ -187,6 +230,85 @@ namespace TheBlackForest
                 //
                 // Update experinces points from visiting location
                 _gameTrainee.ExperiencePoints += _currentLocation.ExperiencePoints;
+            }
+        }
+
+        private void PickUpAction()
+        {
+            //
+            // display a list of traveler objects in space-time location and get a player choice
+            //
+            int traineeObjectToPickUpId = _gameConsoleView.DisplayGetTraineeObjectToPickUp();
+
+            //
+            // add the traveler object to traveler's inventory
+            //
+            if (traineeObjectToPickUpId != 0)
+            {
+                //
+                // get the game object from the universe
+                //
+                TraineeObject traineeObject = _gameBlackForest.GetLessonObjectById(traineeObjectToPickUpId) as TraineeObject;
+
+                //
+                // note: traveler object is added to list and the space-time location is set to 0
+                //
+                _gameTrainee.TraineeInventory.Add(traineeObject);
+                traineeObject.BlackForestLocationId = 0;
+
+                //
+                // display confirmation message
+                //
+                _gameConsoleView.DisplayConfirmTraineeObjectAddedToTraineeInventory(traineeObject);
+            }
+        }
+
+        private void PutDownAction()
+        {
+            //
+            // display a list of traveler objects in inventory and get a player choice
+            //
+            int traineeInventoryObjectToPutDownId = _gameConsoleView.DisplayGetTraineeInventoryObjectToPutDown();
+
+            //
+            // get the game object from the universe
+            //
+            TraineeObject traineeObject = _gameBlackForest.GetLessonObjectById(traineeInventoryObjectToPutDownId) as TraineeObject;
+
+            //
+            // remove the object from inventory and set the space-time location to the current value
+            //
+            _gameTrainee.TraineeInventory.Remove(traineeObject);
+            traineeObject.BlackForestLocationId = _gameTrainee.BlackForestTimeLocationID;
+
+            //
+            // display confirmation message
+            //
+            _gameConsoleView.DisplayConfirmTraineeObjectRemovedFromInventory(traineeObject);
+
+        }
+
+        private void LookAtAction()
+        {
+            //
+            // display a list of lesson objects in black forst time location and get a player choice
+            //
+            int lessonObjectToLookAtId = _gameConsoleView.DisplayGetLessonObjectToLookAt();
+
+            //
+            // display game object info
+            //
+            if (lessonObjectToLookAtId != 0)
+            {
+                //
+                // get the game object from the universe
+                //
+                LessonObject lessonObject = _gameBlackForest.GetLessonObjectById(lessonObjectToLookAtId);
+
+                //
+                // display information for the object chosen
+                //
+                _gameConsoleView.DisplayLessonObjectInfo(lessonObject);
             }
         }
 

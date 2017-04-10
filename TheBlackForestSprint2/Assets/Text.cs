@@ -193,18 +193,6 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-            public static List<string> StatusBox(Trainee trainee, BlackForest blackForest)
-            {
-                List<string> statusBoxText = new List<string>();
-
-                statusBoxText.Add($"Experience Points: {trainee.ExperiencePoints}\n");
-                statusBoxText.Add($"Health: {trainee.Health}\n");
-                statusBoxText.Add($"Lives: {trainee.Lives}\n");
-
-
-                return statusBoxText;
-            }
-
             public static string ListBlackForestLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
             {
                 string messaBoxText =
@@ -276,7 +264,15 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-            public static string CurrentLocationInfo(ForestTimeLocation forestTimeLocation)
+        public static List<string> StatusBox(Trainee trainee)
+        {
+            List<string> statusBoxText = new List<string>();
+
+            statusBoxText.Add($"Trainee's Age: {trainee.Age}\n");
+
+            return statusBoxText;
+        }
+        public static string CurrentLocationInfo(ForestTimeLocation forestTimeLocation)
             {
                 string messageBoxText =
                     $"Current Location: {forestTimeLocation.CommonName}\n" +
@@ -314,15 +310,156 @@ namespace TheBlackForest
 
                 return messageBoxText;
             }
-            #endregion
 
-            public static List<string> StatusBox(Trainee trainee)
+        public static string ListAllLessonObjects(IEnumerable<LessonObject> lessonObjects)
+        {
+            //
+            // Display table name and colum Headers
+            //
+            string messageBoxText =
+                "Lesson Objects\n" +
+                "\n" +
+
+                //
+                // Display Table header
+                //
+                "ID".PadRight(10) +
+                "Name".PadRight(30) +
+                "Balck Forest Time Location Id".PadRight(10) + "\n" +
+                "---".PadRight(10) +
+                "---------------------------".PadRight(30) +
+                "---------------------------".PadRight(10) + "\n";
+
+            //
+            // Display all traveler objects in rows
+            //
+            string lessonObjectRows = null;
+            foreach (LessonObject lessonObject in lessonObjects)
             {
-                List<string> statusBoxText = new List<string>();
-
-                statusBoxText.Add($"Trainee's Age: {trainee.Age}\n");
-
-                return statusBoxText;
+                lessonObjectRows +=
+                    $"{lessonObject.Id}".PadRight(10) +
+                    $"{lessonObject.Name}".PadRight(30) +
+                    $"{lessonObject.BlackForestLocationId}".PadRight(10) +
+                    Environment.NewLine;
             }
+
+            messageBoxText += lessonObjectRows;
+
+            return messageBoxText;
+        }
+
+        public static string LookAt(LessonObject lessonObject)
+        {
+            string messageBoxText = "";
+
+            messageBoxText =
+                $"{lessonObject.Name}\n" +
+                "/n" +
+                lessonObject.Description + "\n" +
+                "\n";
+
+            if (lessonObject is TraineeObject)
+            {
+                TraineeObject traineeObject = lessonObject as TraineeObject;
+
+                messageBoxText += $"The {traineeObject.Name} has a value of {traineeObject.Value} and ";
+
+                if (traineeObject.CanInventory)
+                {
+                    messageBoxText += "may be added to your inventory.";
+                }
+                else
+                {
+                    messageBoxText += "may not be added to your inventory.";
+                }
+            }
+            else
+            {
+                messageBoxText += $"The {lessonObject.Name} may not be added to your inventory.";
+            }
+            return messageBoxText;
+        }
+
+        public static string LessonObjectsChooseList(IEnumerable<LessonObject> lessonObjects)
+        {
+            //
+            // display table name and column headers
+            //
+            string messageBoxText =
+                "Lesson Objects\n" +
+                " \n" +
+
+                //
+                // display table header
+                //
+                "ID".PadRight(10) +
+                "Name".PadRight(30) + "\n" +
+                "---".PadRight(10) +
+                "----------------------".PadRight(30) + "\n";
+
+            //
+            // display all trainee lesson in rows
+            //
+            string lessonObjectRows = null;
+            foreach (LessonObject lessonObject in lessonObjects)
+            {
+                lessonObjectRows +=
+                    $"{lessonObject.Id}".PadRight(10) +
+                    $"{lessonObject.Name}".PadRight(30) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += lessonObjectRows;
+
+            return messageBoxText;
+        }
+
+        public static string CurrentTraineeInventory(IEnumerable<TraineeObject> traineeInventory)
+        {
+            string messageBoxText = "";
+
+            //
+            // display table header
+            //
+            messageBoxText =
+            "ID".PadRight(10) +
+            "Name".PadRight(30) +
+            "Type".PadRight(10) +
+            "\n" +
+            "---".PadRight(10) +
+            "----------------------------".PadRight(30) +
+            "----------------------".PadRight(10) +
+            "\n";
+
+            //
+            // display all traveler objects in rows
+            //
+            string traineeInventoryObjectRows = null;
+            foreach (TraineeObject traineeInventoryObject in traineeInventory)
+            {
+                traineeInventoryObjectRows +=
+                    $"{traineeInventoryObject.Id}".PadRight(10) +
+                    $"{traineeInventoryObject.Name}".PadRight(30) +
+                    $"{traineeInventoryObject.Type}".PadRight(10) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += traineeInventoryObjectRows;
+
+            return messageBoxText;
+        }
+        #endregion
+
+        public static List<string> StatusBox(Trainee trainee, BlackForest blackForest)
+        {
+            List<string> statusBoxText = new List<string>();
+
+            statusBoxText.Add($"Experience Points: {trainee.ExperiencePoints}\n");
+            statusBoxText.Add($"Health: {trainee.Health}\n");
+            statusBoxText.Add($"Lives: {trainee.Lives}\n");
+
+
+            return statusBoxText;
         }
     }
+}

@@ -156,6 +156,11 @@ namespace TheBlackForest
             bool validResponse = false;
             integerChoice = 0;
 
+            //
+            // Validate on tange either minimumValue and maximumValue are not 0
+            //
+            bool validateRange = (minimumValue != 0 || maximumValue != 0);
+
             DisplayInputBoxPrompt(prompt);
             while (!validResponse)
             {
@@ -500,6 +505,11 @@ namespace TheBlackForest
             DisplayGamePlayScreen("Trainee Information", Text.TraineeInfo(_gameTrainee), ActionMenu.MainMenu, "");
         }
 
+        public void DisplayConfirmTraineeObjectRemovedFromInventory(TraineeObject objectRemovedFromTraineeInventory)
+        {
+            DisplayGamePlayScreen("Put Down Game Object", $"The {objectRemovedFromTraineeInventory.Name} has been removed from your inventory.", ActionMenu.MainMenu, "");
+        }
+
         #endregion
 
         /// <summary>
@@ -533,15 +543,170 @@ namespace TheBlackForest
 
         public void DisplayListOfForestTimeLocations()
         {
-            DisplayGamePlayScreen("List: Forest Time Locations", Text.ListBlackForestLocations
-                (_blackForest.ForestTimeLocations), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("List: Forest Time Locations", Text.ListBlackForestLocations(_blackForest.ForestTimeLocations), ActionMenu.AdminMenu, "");
         }
 
         public void DisplayLookAround()
         {
-            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById
-                (_gameTrainee.BlackForestTimeLocationID);
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+
+            //
+            // Get list of lesson object in surrent black forest time location
+            //
+            List<LessonObject> lessonObjectsInCurrentBlackForestTimeLocation = _blackForest.GetLessonObjectsByForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
+
+            string messageBoxText = Text.LookAround(currentForestTimeLocation) + Environment.NewLine + Environment.NewLine;
+            messageBoxText += Text.LessonObjectsChooseList(lessonObjectsInCurrentBlackForestTimeLocation);
+
             DisplayGamePlayScreen("Current Location", Text.LookAround(currentForestTimeLocation), ActionMenu.MainMenu, "");
+        }
+
+        public int DisplayGetLessonObjectToLookAt()
+        {
+            int lessonObjectId = 0;
+            bool validLessonObjectId = false;
+
+            //
+            // Get a list of lesson objects in the current forest time location
+            //
+            List<LessonObject> lessonObjectsInBlackForestTimeLocation = _blackForest.GetLessonObjectsByForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
+
+            if (lessonObjectsInBlackForestTimeLocation.Count > 0)
+            {
+                DisplayGamePlayScreen("Look at a Object", Text.ListAllLessonObjects(lessonObjectsInBlackForestTimeLocation), ActionMenu.MainMenu, "");
+
+                while (!validLessonObjectId)
+                {
+                    //
+                    // Get an interger fromthe player
+                    //
+                    GetInteger($"Enter the Id number of the object you wish to look at: ", 0, 0, out lessonObjectId);
+
+                    //
+                    // Validate integer as a calling game object is and in current location
+                    //
+                    if (_blackForest.IsVaidLessonObjectByLocationId(lessonObjectId, _gameTrainee.BlackForestTimeLocationID))
+                    {
+                        validLessonObjectId = true;
+                    }
+                    else
+                    {
+                        ClearInputBox();
+                        DisplayInputErrorMessage("It appears you entered and invalid game object is, Please try again.");
+                    }
+                }
+            }
+            else
+            {
+                DisplayGamePlayScreen("Look at a Object", "It appears there are no game objects here.", ActionMenu.MainMenu, "");
+            }
+            return lessonObjectId;
+        }
+
+        public int DisplayGetTraineeObjectToPickUp()
+        {
+            int lessonObjectId = 0;
+            bool validLessonObjectId = false;
+
+            //
+            // Get a list of trainee objects in the current balck forest time location
+            //
+            List<TraineeObject> traineeObjectInBlackForestTimeLocation = _blackForest.GetTraineeObjectsByBlackForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
+
+            if (traineeObjectInBlackForestTimeLocation.Count > 0)
+            {
+                DisplayGamePlayScreen("Pick Up Lesson Object", Text.LessonObjectsChooseList(traineeObjectInBlackForestTimeLocation), ActionMenu.MainMenu, "");
+
+                while (!validLessonObjectId)
+                {
+                    //
+                    // Get an integer from the player
+                    //
+                    GetInteger($"Enter the Id number of the object you wish to add to your inventory: ", 0, 0, out lessonObjectId);
+
+                    //
+                    // Validate integer as a valid lesson object id and in current location
+                    //
+                    if (_blackForest.IsValidTraineeObjectByLocationId(lessonObjectId, _gameTrainee.BlackForestTimeLocationID))
+                    {
+                        TraineeObject traineeObject = _blackForest.GetLessonObjectById(lessonObjectId) as TraineeObject;
+                        if (traineeObject.CanInventory)
+                        {
+                            validLessonObjectId = true;
+                        }
+                        else
+                        {
+                            ClearInputBox();
+                            DisplayInputErrorMessage("It appears you may not inventory that object. Please try again.");
+                        }
+                    }
+                    else
+                    {
+                        ClearInputBox();
+                        DisplayInputErrorMessage("It appears you entered an invalid lesson object id. Please try again.");
+                    }
+                }
+            }
+            else
+            {
+                DisplayGamePlayScreen("Pick Up Lesson Object", "It appears there are no lesson objects here.", ActionMenu.MainMenu, "");
+            }
+
+            return lessonObjectId;
+        }
+
+        public int DisplayGetTraineeInventoryObjectToPutDown()
+        {
+            int traineeObjectId = 0;
+            bool validTraineeInventoryObjectId = false;
+
+            if (_gameTrainee.TraineeInventory.Count > 0)
+            {
+                DisplayGamePlayScreen("Put Down Game Object", Text.LessonObjectsChooseList(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
+
+                while (!validTraineeInventoryObjectId)
+                {
+                    //
+                    // get an integer from the player
+                    //
+                    GetInteger($"Enter the Id number of the object you wish to remove from your inventory: ", 0, 0, out traineeObjectId);
+
+                    //
+                    // find object in inventory
+                    // note: LINQ used, but a foreach loop may also be used 
+                    //
+                    TraineeObject objectToPutDown = _gameTrainee.TraineeInventory.FirstOrDefault(o => o.Id == traineeObjectId);
+
+                    //
+                    // validate object in inventory
+                    //
+                    if (objectToPutDown != null)
+                    {
+                        validTraineeInventoryObjectId = true;
+                    }
+                    else
+                    {
+                        ClearInputBox();
+                        DisplayInputErrorMessage("It appears you entered the Id of an object not in the inventory. Please try again.");
+                    }
+                }
+            }
+            else
+            {
+                DisplayGamePlayScreen("Pick Up Game Object", "It appears there are no objects currently in inventory.", ActionMenu.MainMenu, "");
+            }
+
+            return traineeObjectId;
+        }
+
+        public void DisplayConfirmTraineeObjectAddedToTraineeInventory(TraineeObject objectAddedToTraineeInventory)
+        {
+            DisplayGamePlayScreen("Pick Up Lesson Object", $"The {objectAddedToTraineeInventory.Name} has been added to your inventory.", ActionMenu.MainMenu, "");
+        }
+
+        public void DisplayLessonObjectInfo(LessonObject lessonObject)
+        {
+            DisplayGamePlayScreen("Current Location", Text.LookAt(lessonObject), ActionMenu.MainMenu, "");
         }
 
         public void DisplayLocationsVisited()
@@ -553,6 +718,11 @@ namespace TheBlackForest
             }
 
             DisplayGamePlayScreen("Forest-Time Locations Visited", Text.VisitedLocations(visitedBlackForestTimeLocations), ActionMenu.MainMenu, "");
+        }
+
+        public void DisplayListOfAllLessonObjects()
+        {
+            DisplayGamePlayScreen("List: Lesson Objects", Text.ListAllLessonObjects(_blackForest.LessonObject), ActionMenu.AdminMenu, "");
         }
 
         public int DisplayGetNextForestTimeLocation()
@@ -592,6 +762,12 @@ namespace TheBlackForest
 
             return forestTimeLocationId;
         }
+
+        public void DisplayTraineeInventory()
+        {
+            DisplayGamePlayScreen("Current Inventory", Text.CurrentTraineeInventory(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
+        }
     }
+
     #endregion
 }

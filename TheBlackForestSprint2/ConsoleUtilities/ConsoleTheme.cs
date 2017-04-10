@@ -26,48 +26,48 @@ namespace TheBlackForest
         //
         // console window header colors
         //
-        public static ConsoleColor HeaderBackgroundColor = ConsoleColor.Gray;
+        public static ConsoleColor HeaderBackgroundColor = ConsoleColor.Black;
         public static ConsoleColor HeaderForegroundColor = ConsoleColor.Gray;
 
         //
         // console window footer colors
         //
-        public static ConsoleColor FooterBackgroundColor = ConsoleColor.Gray;
+        public static ConsoleColor FooterBackgroundColor = ConsoleColor.Black;
         public static ConsoleColor FooterForegroundColor = ConsoleColor.Gray;
 
         //
         // menu box colors
         //
         public static ConsoleColor MenuBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor MenuForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor MenuForegroundColor = ConsoleColor.Blue;
         public static ConsoleColor MenuBorderColor = ConsoleColor.Gray;
 
         //
         // message box colors
         //
         public static ConsoleColor MessageBoxBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor MessageBoxForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor MessageBoxForegroundColor = ConsoleColor.Blue;
         public static ConsoleColor MessageBoxBorderColor = ConsoleColor.Gray;
         public static ConsoleColor MessageBoxHeaderBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor MessageBoxHeaderForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor MessageBoxHeaderForegroundColor = ConsoleColor.Blue;
 
         //
         // status box colors
         //
         public static ConsoleColor StatusBoxBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor StatusBoxForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor StatusBoxForegroundColor = ConsoleColor.Blue;
         public static ConsoleColor StatusBoxBorderColor = ConsoleColor.Gray;
         public static ConsoleColor StatusBoxHeaderBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor StatusBoxHeaderForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor StatusBoxHeaderForegroundColor = ConsoleColor.Blue;
 
         //
         // input box colors
         //
         public static ConsoleColor InputBoxBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor InputBoxForegroundColor = ConsoleColor.Gray;
-        public static ConsoleColor InputBoxErrorMessageForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor InputBoxForegroundColor = ConsoleColor.Blue;
+        public static ConsoleColor InputBoxErrorMessageForegroundColor = ConsoleColor.Red;
         public static ConsoleColor InputBoxBorderColor = ConsoleColor.Gray;
         public static ConsoleColor InputBoxHeaderBackgroundColor = ConsoleColor.Black;
-        public static ConsoleColor InputBoxHeaderForegroundColor = ConsoleColor.Gray;
+        public static ConsoleColor InputBoxHeaderForegroundColor = ConsoleColor.Blue;
     }
 }

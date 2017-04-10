@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TheBlackForest
 {
-        public static class BlackForestObjects
+    /// <summary>
+    /// This is the static class to hold in the game Black Forest.
+    /// </summary>
+        public static partial class BlackForestObjects
         {
             public static List<ForestTimeLocation> ForestTimeLocation = new List<ForestTimeLocation>()
         {

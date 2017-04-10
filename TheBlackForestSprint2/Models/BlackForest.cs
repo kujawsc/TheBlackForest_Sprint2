@@ -17,11 +17,18 @@ namespace TheBlackForest
         // list of all forest-time location
         //
         private List<ForestTimeLocation> _forestTimeLocations;
+        private List<LessonObject> _lessonObject;
 
         public List<ForestTimeLocation> ForestTimeLocations
         {
             get { return _forestTimeLocations; }
             set { _forestTimeLocations = value; }
+        }
+
+        public List<LessonObject> LessonObject
+        {
+            get { return _lessonObject; }
+            set { _lessonObject = value; }
         }
 
 
@@ -50,6 +57,7 @@ namespace TheBlackForest
         private void IntializeBlackForest()
         {
             _forestTimeLocations = BlackForestObjects.ForestTimeLocation;
+            _lessonObject = BlackForestObjects.lessonObject;
         }
 
         #endregion
@@ -156,6 +164,124 @@ namespace TheBlackForest
             return forestTimeLocation;
         }
 
+        public bool IsVaidLessonObjectByLocationId (int lessonObjectId, int currentForestTimeLocation)
+        {
+            List<int> lessonObjectIds = new List<int>();
+
+            //
+            // Create a list of lesson object ids in current space-time location
+            //
+            foreach (LessonObject lessonObect in _lessonObject)
+            {
+                if (lessonObect.BlackForestLocationId == currentForestTimeLocation)
+                {
+                    lessonObjectIds.Add(lessonObect.Id);
+                }
+            }
+
+            //
+            // Determine if the lesson object id is a valid if and return the result
+            //
+            if (lessonObjectIds.Contains(lessonObjectId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsValidTraineeObjectByLocationId(int traineeObjectId, int currentBlackForestTimeLocation)
+        {
+            List<int> traineeObjectIds = new List<int>();
+
+            //
+            // create a list of trainee object ids in current black forest time location
+            //
+            foreach (LessonObject lessonObject in _lessonObject)
+            {
+                if (lessonObject.BlackForestLocationId == currentBlackForestTimeLocation && lessonObject is TraineeObject)
+                {
+                    traineeObjectIds.Add(lessonObject.Id);
+                }
+
+            }
+
+            //
+            // determine if the lesson object id is a valid id and return the result
+            //
+            if (traineeObjectIds.Contains(traineeObjectId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public LessonObject GetLessonObjectById(int Id)
+        {
+            LessonObject lessonObjectToReturn = null;
+
+            //
+            // Run through the game object list and grab the correct one
+            //
+            foreach (LessonObject lessonObject in _lessonObject)
+            {
+                if (lessonObject.Id == Id)
+                {
+                    lessonObjectToReturn = lessonObject;
+                }
+            }
+
+            //
+            // The specified ID was not found in the universe
+            // throw and exception
+            //
+            if (lessonObjectToReturn == null)
+            {
+                string feedbackMessage = $"The Lesson Object ID {Id} does not exist in the current Black Forest.";
+                throw new ArgumentException(Id.ToString(), feedbackMessage);
+            }
+
+            return lessonObjectToReturn;
+        }
+
+        public List<LessonObject> GetLessonObjectsByForestTimeLocationId(int forestTimeLocationId)
+        {
+            List<LessonObject> lessonObjects = new List<LessonObject>();
+
+            //
+            // Run through the game object list and grab all that are in the current space-time location
+            //
+            foreach (LessonObject lessonObject in _lessonObject)
+            {
+                if (lessonObject.BlackForestLocationId == forestTimeLocationId)
+                {
+                    lessonObjects.Add(lessonObject);
+                }
+            }
+            return lessonObjects;
+        }
+
+        public List<TraineeObject> GetTraineeObjectsByBlackForestTimeLocationId(int blackForestTimeLocationId)
+        {
+            List<TraineeObject> traineeObjects = new List<TraineeObject>();
+
+            //
+            // Run through the object list and grab all that are in the current balck forest time location
+            //
+            foreach (LessonObject lessonObject in _lessonObject)
+            {
+                if (lessonObject.BlackForestLocationId == blackForestTimeLocationId && lessonObject is TraineeObject)
+                {
+                    traineeObjects.Add(lessonObject as TraineeObject);
+                }
+            }
+
+            return traineeObjects;
+        }
         #endregion
     }
 }

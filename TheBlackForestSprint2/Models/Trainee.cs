@@ -33,6 +33,7 @@ namespace TheBlackForest
         private int _health;
         private int _lives;
         private List<int> _forestTimeLocationVisited;
+        private List<TraineeObject> _traineeInventory;
 
 
 
@@ -82,6 +83,12 @@ namespace TheBlackForest
             set { _forestTimeLocationVisited = value; }
         }
 
+        public List<TraineeObject> TraineeInventory
+        {
+            get { return _traineeInventory; }
+            set { _traineeInventory = value; }
+        }
+
         #endregion
 
 
@@ -90,11 +97,13 @@ namespace TheBlackForest
         public Trainee()
         {
             _forestTimeLocationVisited = new List<int>();
+            _traineeInventory = new List<TraineeObject>();
         }
 
         public Trainee(string lastname, RaceType race, int forestTimeLocationID) : base(lastname, race, forestTimeLocationID)
         {
             _forestTimeLocationVisited = new List<int>();
+            _traineeInventory = new List<TraineeObject>();
         }
 
         #endregion
