@@ -31,7 +31,6 @@ namespace TheBlackForest
             set { _forestObjects = value; }
         }
 
-
         #endregion
 
         #region ***** constructor *****

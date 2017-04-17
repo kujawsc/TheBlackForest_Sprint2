@@ -13,7 +13,6 @@ namespace TheBlackForest
         {
             public static List<ForestTimeLocation> ForestTimeLocation = new List<ForestTimeLocation>()
         {
-
             new ForestTimeLocation
             {
                 CommonName = "Crystal Base",

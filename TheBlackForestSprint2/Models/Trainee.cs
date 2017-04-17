@@ -26,6 +26,7 @@ namespace TheBlackForest
         #endregion
 
         #region FIELDS
+
         private string _lastName;
         private LanguageType _language;
         /*private bool _isImmortal;*/
@@ -35,12 +36,11 @@ namespace TheBlackForest
         private List<int> _forestTimeLocationVisited;
         private List<TraineeObject> _traineeInventory;
 
-
-
         #endregion
 
 
         #region PROPERTIES
+
         public string LastName
         {
             get { return _lastName; }

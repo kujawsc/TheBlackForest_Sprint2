@@ -14,7 +14,7 @@ namespace TheBlackForest
         #region ENUMERABLES
 
         public enum RaceType
-        {
+        { 
             None,
             Human,
             Magician,

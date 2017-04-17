@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TheBlackForest
 {
     public enum TraineeAction
-    {
+    { 
         None,
         MissionSetup,
         LookAround,

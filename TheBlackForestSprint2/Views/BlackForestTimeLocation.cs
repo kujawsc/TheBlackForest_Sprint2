@@ -10,7 +10,7 @@ namespace TheBlackForest
     /// class for the game map locations
     /// </summary>
     public class ForestTimeLocation
-    {
+    { 
         #region FIELDS
 
         private string _commonName;

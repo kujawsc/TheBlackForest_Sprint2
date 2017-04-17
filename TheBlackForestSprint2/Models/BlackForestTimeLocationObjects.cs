@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheBlackForest
 {
-    public class BlackForestTimeLocationObjects : ForestObjects
+    public class BlackForestTimeLocationObjects :  ForestObjects
     {
         public override int Id { get; set; }
         public override string Name { get; set; }

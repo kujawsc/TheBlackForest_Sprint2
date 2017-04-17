@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TheBlackForest
 {
     public enum TraineeObjectType
-    {
+    { 
         None,
         Food,
         Water,

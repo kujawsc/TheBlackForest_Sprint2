@@ -135,7 +135,7 @@ namespace TheBlackForest
                 IsConsumable = true,
                 IsVisible = true
             },
-
+ 
                  new BlackForestTimeLocationObjects
             {
                 Id = 5,
@@ -144,7 +144,7 @@ namespace TheBlackForest
                 Description = "A large wooden chest adorned with potions.",
                 IsDeadly = true
             },
-
+               
             new BlackForestTimeLocationObjects
             {
                 Id = 6,

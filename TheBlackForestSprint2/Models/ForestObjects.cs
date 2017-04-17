@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TheBlackForest
 {
     public abstract class ForestObjects
-    {
+    { 
         public abstract int Id { get; set; }
         public abstract string Name { get; set; }
         public abstract string Description { get; set; }

@@ -15,6 +15,7 @@ namespace TheBlackForest
             public static List<string> FooterText = new List<string>() { "The Magical Coporation, 2020" };
 
             #region INTITIAL GAME SETUP
+
             public static string MissionIntro()
             {
                 string messageBoxText =

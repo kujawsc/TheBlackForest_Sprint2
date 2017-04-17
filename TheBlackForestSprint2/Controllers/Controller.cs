@@ -58,7 +58,6 @@ namespace TheBlackForest
             //
             // Add initial items to the trainee inventory
             //
-
             _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetForestObjectById(8) as TraineeObject);
             _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetForestObjectById(9) as TraineeObject);
 

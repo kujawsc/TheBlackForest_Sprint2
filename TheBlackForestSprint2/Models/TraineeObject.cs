@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace TheBlackForest
 {
     public class TraineeObject :  ForestObjects
-    {
+    { 
         public override int Id { get; set; }
         public override string Name { get; set; }
         public override string Description { get; set; }
