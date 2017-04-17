@@ -18,10 +18,10 @@ namespace TheBlackForest
         TraineeInfo,
         TraineeInventory,
         TraineeLocationVisited,
-        ListLessonObjects,
-        ListBlackForestLocations,
+        ListForestObjects,
+        ListOfBlackForestLocations,
         AdminMenu,
-        RetrunToMainMenu,
+        ReturnToMainMenu,
         Exit
     }
 }

@@ -73,8 +73,6 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-
-
             public static string InitializeMissionGetTraineeAge(Trainee gameTraveler)
             {
                 string messageBoxText =
@@ -181,52 +179,55 @@ namespace TheBlackForest
 
             #region MAIN MENU ACTION SCREENS
 
-            public static string TraineeInfo(Trainee gameTrainee)
+            public static string TraineeInfo(Trainee gameTrainee, ForestTimeLocation currentLocation)
             {
-                string messageBoxText =
-                    $"\tTraveler Name: {gameTrainee.FirstName}\n" +
-                    $"\tTraveler Name: {gameTrainee.LastName}\n" +
-                    $"\tTraveler Age: {gameTrainee.Age}\n" +
-                    $"\tTraveler Race: {gameTrainee.Race}\n" +
-                    " \n";
+            string messageBoxText =
+                $"\tTraveler Name: {gameTrainee.FirstName}\n" +
+                $"\tTraveler Name: {gameTrainee.LastName}\n" +
+                $"\tTraveler Age: {gameTrainee.Age}\n" +
+                $"\tTraveler Race: {gameTrainee.Race}\n" +
+                " \n" +
+                $"\tCurrent Location: {currentLocation.CommonName}\n" +
+                "\n";
 
                 return messageBoxText;
             }
 
-            public static string ListBlackForestLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
+            public static string ListAllBlackForestLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
             {
-                string messaBoxText =
-                    "Forest Time Locations\n" +
-                    "\n" +
+            string messageBoxText =
+             "Black Forest Time Locations\n" +
+             " \n" +
 
-                    //
-                    // Display table header
-                    //
-                    "ID".PadRight(10) + "Name".PadRight(30) + "\n" +
-                    "---".PadRight(10) + "-----------------------------".PadRight(30) + "\n";
-                //
-                // Display all locations
-                //
-                string forestTimeLocationList = null;
-                foreach (ForestTimeLocation forestTimeLocation in forestTimeLocations)
-                {
-                    forestTimeLocationList +=
-                        $"{forestTimeLocation.BlackForestLocationID}".PadRight(10) +
-                        $"{forestTimeLocation.CommonName}".PadRight(30) +
-                        Environment.NewLine;
-                }
+             //
+             // Display table header
+             //
+             "ID".PadRight(10) + "Name".PadRight(30) + "\n" +
+             "---".PadRight(10) + "----------------------".PadRight(30) + "\n";
 
-                messaBoxText += forestTimeLocationList;
-
-                return messaBoxText;
+            //
+            // Display all locations
+            //
+            string forestTimeLocationList = null;
+            foreach (ForestTimeLocation forestTimeLocation in forestTimeLocations)
+            {
+                forestTimeLocationList +=
+                    $"{forestTimeLocation.BlackForestLocationID}".PadRight(10) +
+                    $"{forestTimeLocation.CommonName}".PadRight(30) +
+                    Environment.NewLine;
             }
 
-            public static string LookAround(ForestTimeLocation _forestTimeLocation)
+            messageBoxText += forestTimeLocationList;
+
+            return messageBoxText;
+        }
+
+        public static string LookAround(ForestTimeLocation forestTimeLocation)
             {
                 string messageBoxText =
-                    $"Current Location: {_forestTimeLocation.CommonName}\n" +
+                    $"Current Location: {forestTimeLocation.CommonName}\n" +
                     "\n" +
-                    _forestTimeLocation.GeneralContents;
+                    forestTimeLocation.Description;
 
                 return messageBoxText;
             }
@@ -236,6 +237,8 @@ namespace TheBlackForest
                 string messageBoxText =
                     $"{gametrainee},  Black Forest will need to know the name of the name of the new location. \n" +
                     "\n" +
+                    "Enter the ID number of your desired location from the table below.\n" +
+                " \n" +
 
                     //
                     // Display table header
@@ -285,7 +288,7 @@ namespace TheBlackForest
             public static string VisitedLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
             {
                 string messageBoxText =
-                    "Black Forest -Time Locations Visited\n" +
+                    "Black Forest Time Locations Visited\n" +
                     "\n" +
 
                     //
@@ -311,13 +314,13 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-        public static string ListAllLessonObjects(IEnumerable<LessonObject> lessonObjects)
+        public static string ListAllForestObjects(IEnumerable<ForestObjects> forestObjects)
         {
             //
             // Display table name and colum Headers
             //
             string messageBoxText =
-                "Lesson Objects\n" +
+                "Forest Objects\n" +
                 "\n" +
 
                 //
@@ -331,36 +334,80 @@ namespace TheBlackForest
                 "---------------------------".PadRight(10) + "\n";
 
             //
-            // Display all traveler objects in rows
+            // Display all trainee objects in rows
             //
-            string lessonObjectRows = null;
-            foreach (LessonObject lessonObject in lessonObjects)
+            string forestObjectRows = null;
+            foreach (ForestObjects forestObject in forestObjects)
             {
-                lessonObjectRows +=
-                    $"{lessonObject.Id}".PadRight(10) +
-                    $"{lessonObject.Name}".PadRight(30) +
-                    $"{lessonObject.BlackForestLocationId}".PadRight(10) +
+                forestObjectRows +=
+                    $"{forestObject.Id}".PadRight(10) +
+                    $"{forestObject.Name}".PadRight(30) +
+                    $"{forestObject.BlackForestLocationId}".PadRight(10) +
                     Environment.NewLine;
             }
 
-            messageBoxText += lessonObjectRows;
+            messageBoxText += forestObjectRows;
 
             return messageBoxText;
         }
 
-        public static string LookAt(LessonObject lessonObject)
+        public static string ListBlackForestLocationObjectsByBlackForestTimeLocation(int blackForestTimeLocationId, IEnumerable<ForestObjects> forestObjects)
+        {
+            //
+            // generate a list of traveler objects from the game object list with the current space-time location id
+            //
+            List<BlackForestTimeLocationObjects> blackForestTimeLocationObjects = new List<BlackForestTimeLocationObjects>();
+            foreach (var forestObject in forestObjects)
+            {
+                if (forestObject is TraineeObject && forestObject.BlackForestLocationId == blackForestTimeLocationId)
+                {
+                    blackForestTimeLocationObjects.Add(forestObject as BlackForestTimeLocationObjects);
+                }
+            }
+
+            //
+            // display table name and column headers
+            //
+            string messageBoxText =
+                "Space-Time Location Objects\n" +
+                " \n" +
+
+                //
+                // display table header
+                //
+                "ID".PadRight(10) + "Name".PadRight(30) + "Type".PadRight(20) + "\n" +
+                "---".PadRight(10) + "----------------------".PadRight(30) +
+                "----------------------".PadRight(20) + "\n";
+
+            //
+            // display all traveler objects in rows
+            //
+            string blackForrestTimeLocationObjectRows = null;
+            foreach (BlackForestTimeLocationObjects blackForestTimeLocationObject in blackForestTimeLocationObjects)
+            {
+                blackForrestTimeLocationObjectRows +=
+                    $"{blackForestTimeLocationObject.Id}".PadRight(10) +
+                    $"{blackForestTimeLocationObject.Name}".PadRight(30) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += blackForrestTimeLocationObjectRows;
+
+            return messageBoxText;
+        }
+        public static string LookAt(ForestObjects forestObjects)
         {
             string messageBoxText = "";
 
             messageBoxText =
-                $"{lessonObject.Name}\n" +
+                $"{forestObjects.Name}\n" +
                 "/n" +
-                lessonObject.Description + "\n" +
+                forestObjects.Description + "\n" +
                 "\n";
 
-            if (lessonObject is TraineeObject)
+            if (forestObjects is TraineeObject)
             {
-                TraineeObject traineeObject = lessonObject as TraineeObject;
+                TraineeObject traineeObject = forestObjects as TraineeObject;
 
                 messageBoxText += $"The {traineeObject.Name} has a value of {traineeObject.Value} and ";
 
@@ -375,18 +422,18 @@ namespace TheBlackForest
             }
             else
             {
-                messageBoxText += $"The {lessonObject.Name} may not be added to your inventory.";
+                messageBoxText += $"The {forestObjects.Name} may not be added to your inventory.";
             }
             return messageBoxText;
         }
 
-        public static string LessonObjectsChooseList(IEnumerable<LessonObject> lessonObjects)
+        public static string ForestObjectsChooseList(IEnumerable<ForestObjects> forestObjects)
         {
             //
             // display table name and column headers
             //
             string messageBoxText =
-                "Lesson Objects\n" +
+                "Forest Objects\n" +
                 " \n" +
 
                 //
@@ -400,18 +447,54 @@ namespace TheBlackForest
             //
             // display all trainee lesson in rows
             //
-            string lessonObjectRows = null;
-            foreach (LessonObject lessonObject in lessonObjects)
+            string forestObjecstRows = null;
+            foreach (ForestObjects forestObject in forestObjects)
             {
-                lessonObjectRows +=
-                    $"{lessonObject.Id}".PadRight(10) +
-                    $"{lessonObject.Name}".PadRight(30) +
+                forestObjecstRows +=
+                    $"{forestObject.Id}".PadRight(10) +
+                    $"{forestObject.Name}".PadRight(30) +
                     Environment.NewLine;
             }
 
-            messageBoxText += lessonObjectRows;
+            messageBoxText += forestObjecstRows;
 
             return messageBoxText;
+        }
+
+        public static string CurrentInventory (IEnumerable<TraineeObject> traineeInventory)
+        {
+            string messageBoxText = "";
+
+            //
+            // Display table header
+            //
+            messageBoxText =
+                "ID".PadRight(10) +
+                "Name".PadRight(30) +
+                "Type".PadRight(10) +
+                "\n" +
+                "---".PadRight(10) +
+                "----------------------------".PadRight(30) +
+                "----------------------".PadRight(10) +
+                "\n";
+
+            //
+            // Display all trainee objects in rows
+            //
+            string traineeInventoryObjectsRows = null;
+            foreach (TraineeObject traineeInventoryObject in traineeInventory )
+            {
+                traineeInventoryObjectsRows +=
+                    $"{traineeInventoryObject.Id}".PadRight(10) +
+                    $"{traineeInventoryObject.Name}".PadRight(30) +
+                    $"{traineeInventoryObject.Type}".PadRight(10) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += traineeInventoryObjectsRows;
+
+            return messageBoxText;
+
         }
 
         public static string CurrentTraineeInventory(IEnumerable<TraineeObject> traineeInventory)

@@ -63,9 +63,9 @@ namespace TheBlackForest
             MenuTitle = "Admin Menu",
             MenuChoices = new Dictionary<char, TraineeAction>()
                 {
-                    { '1', TraineeAction.ListBlackForestLocations },
-                    { '2', TraineeAction.ListLessonObjects},
-                    { '0', TraineeAction.RetrunToMainMenu }
+                    { '1', TraineeAction.ListOfBlackForestLocations},
+                    { '2', TraineeAction.ListForestObjects},
+                    { '0', TraineeAction.ReturnToMainMenu }
                 }
         };
     }

@@ -17,7 +17,7 @@ namespace TheBlackForest
         // list of all forest-time location
         //
         private List<ForestTimeLocation> _forestTimeLocations;
-        private List<LessonObject> _lessonObject;
+        private List<ForestObjects> _forestObjects;
 
         public List<ForestTimeLocation> ForestTimeLocations
         {
@@ -25,10 +25,10 @@ namespace TheBlackForest
             set { _forestTimeLocations = value; }
         }
 
-        public List<LessonObject> LessonObject
+        public List<ForestObjects> ForestObjects
         {
-            get { return _lessonObject; }
-            set { _lessonObject = value; }
+            get { return _forestObjects; }
+            set { _forestObjects = value; }
         }
 
 
@@ -57,7 +57,7 @@ namespace TheBlackForest
         private void IntializeBlackForest()
         {
             _forestTimeLocations = BlackForestObjects.ForestTimeLocation;
-            _lessonObject = BlackForestObjects.lessonObject;
+            _forestObjects = BlackForestObjects.forestObjects;
         }
 
         #endregion
@@ -69,7 +69,7 @@ namespace TheBlackForest
         /// </summary>
         /// <param name="forestTimeLocationId">true if Black Forest-Time Location exists</param>
         /// <returns></returns>
-        public bool IsValidForestTimeLocationId(int forestTImeLocationId)
+        public bool IsValidBlackForestTimeLocationId(int forestTImeLocationId)
         {
             List<int> forestTimeLocationsIds = new List<int>();
 
@@ -94,6 +94,73 @@ namespace TheBlackForest
             }
         }
 
+        /// <summary>
+        /// validate traveler object id number in current location
+        /// </summary>
+        /// <param name="travelerObjectId"></param>
+        /// <returns>is Id valid</returns>
+        public bool IsValidForestObjectByLocationId(int forestObjectId, int currentBlackForestTimeLocation)
+        {
+            List<int> forestObjectIds = new List<int>();
+
+            //
+            // create a list of traveler object ids in current space-time location
+            //
+            foreach (ForestObjects forestObject in _forestObjects)
+            {
+                if (forestObject.BlackForestLocationId == currentBlackForestTimeLocation && forestObject is TraineeObject)
+                {
+                    forestObjectIds.Add(forestObject.Id);
+                }
+
+            }
+
+            //
+            // determine if the game object id is a valid id and return the result
+            //
+            if (forestObjectIds.Contains(forestObjectId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// validate traveler object id number in current location
+        /// </summary>
+        /// <param name="travelerObjectId"></param>
+        /// <returns>is Id valid</returns>
+        public bool IsValidTraineeObjectByLocationId(int traineeObjectId, int currentBlackForestTimeLocation)
+        {
+            List<int> traineeObjectIds = new List<int>();
+
+            //
+            // create a list of traveler object ids in current space-time location
+            //
+            foreach (ForestObjects forestObject in _forestObjects)
+            {
+                if (forestObject.BlackForestLocationId == currentBlackForestTimeLocation && forestObject is TraineeObject)
+                {
+                    traineeObjectIds.Add(forestObject.Id);
+                }
+
+            }
+
+            //
+            // determine if the game object id is a valid id and return the result
+            //
+            if (traineeObjectIds.Contains(traineeObjectId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// determine if a location is accessible to the player
@@ -102,7 +169,7 @@ namespace TheBlackForest
         /// <returns>accessible</returns>
         public bool IsAccessibleLocation(int forestTimeLocationId)
         {
-            ForestTimeLocation forestTimeLocation = GetForestTimeLocationById(forestTimeLocationId);
+            ForestTimeLocation forestTimeLocation = GetBlackForestTimeLocationById(forestTimeLocationId);
             if (forestTimeLocation.Accessable == true)
             {
                 return true;
@@ -117,7 +184,7 @@ namespace TheBlackForest
         /// return the next available ID for a Black Forest-Time Location object
         /// </summary>
         /// <returns>next Black Forest-Time LocationObjectID </returns>
-        public int GetMaxForestTimeLocationId()
+        public int GetMaxBlackForestTimeLocationId()
         {
             int MaxId = 0;
 
@@ -137,7 +204,7 @@ namespace TheBlackForest
         /// </summary>
         /// <param name="Id">Black Forest-Time Location ID</param>
         /// <returns>requested Black Forest-Time Location</returns>
-        public ForestTimeLocation GetForestTimeLocationById(int Id)
+        public ForestTimeLocation GetBlackForestTimeLocationById(int Id)
         {
             ForestTimeLocation forestTimeLocation = null;
 
@@ -164,105 +231,74 @@ namespace TheBlackForest
             return forestTimeLocation;
         }
 
-        public bool IsVaidLessonObjectByLocationId (int lessonObjectId, int currentForestTimeLocation)
+        /// <summary>
+        /// return the maximum ID for a GameObject object
+        /// </summary>
+        /// <returns>max GameObjectID </returns>
+        public int GetMaxForestObjectId()
         {
-            List<int> lessonObjectIds = new List<int>();
+            int MaxId = 0;
 
-            //
-            // Create a list of lesson object ids in current space-time location
-            //
-            foreach (LessonObject lessonObect in _lessonObject)
+            foreach (ForestObjects forestObject in _forestObjects)
             {
-                if (lessonObect.BlackForestLocationId == currentForestTimeLocation)
+                if (forestObject.Id > MaxId)
                 {
-                    lessonObjectIds.Add(lessonObect.Id);
+                    MaxId = forestObject.Id;
                 }
             }
 
-            //
-            // Determine if the lesson object id is a valid if and return the result
-            //
-            if (lessonObjectIds.Contains(lessonObjectId))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return MaxId;
         }
 
-        public bool IsValidTraineeObjectByLocationId(int traineeObjectId, int currentBlackForestTimeLocation)
+        /// <summary>
+        /// get a game object using an Id
+        /// </summary>
+        /// <param name="Id">game object Id</param>
+        /// <returns>requested game object</returns>
+        public ForestObjects GetForestObjectById(int Id)
         {
-            List<int> traineeObjectIds = new List<int>();
+            ForestObjects forestObjectToReturn = null;
 
             //
-            // create a list of trainee object ids in current black forest time location
+            // run through the game object list and grab the correct one
             //
-            foreach (LessonObject lessonObject in _lessonObject)
+            foreach (ForestObjects forestObject in _forestObjects)
             {
-                if (lessonObject.BlackForestLocationId == currentBlackForestTimeLocation && lessonObject is TraineeObject)
+                if (forestObject.Id == Id)
                 {
-                    traineeObjectIds.Add(lessonObject.Id);
-                }
-
-            }
-
-            //
-            // determine if the lesson object id is a valid id and return the result
-            //
-            if (traineeObjectIds.Contains(traineeObjectId))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public LessonObject GetLessonObjectById(int Id)
-        {
-            LessonObject lessonObjectToReturn = null;
-
-            //
-            // Run through the game object list and grab the correct one
-            //
-            foreach (LessonObject lessonObject in _lessonObject)
-            {
-                if (lessonObject.Id == Id)
-                {
-                    lessonObjectToReturn = lessonObject;
+                    forestObjectToReturn = forestObject;
                 }
             }
 
             //
-            // The specified ID was not found in the universe
+            // the specified ID was not found in the universe
             // throw and exception
             //
-            if (lessonObjectToReturn == null)
+            if (forestObjectToReturn == null)
             {
-                string feedbackMessage = $"The Lesson Object ID {Id} does not exist in the current Black Forest.";
+                string feedbackMessage = $"The Forest Object ID {Id} does not exist in the current Universe.";
                 throw new ArgumentException(Id.ToString(), feedbackMessage);
             }
 
-            return lessonObjectToReturn;
+            return forestObjectToReturn;
         }
 
-        public List<LessonObject> GetLessonObjectsByForestTimeLocationId(int forestTimeLocationId)
+        public List<ForestObjects> GetForestObjectsByBlackForestTimeLocationId(int balckForestTimeLocationId)
         {
-            List<LessonObject> lessonObjects = new List<LessonObject>();
+            List<ForestObjects> forestObjects = new List<ForestObjects>();
 
             //
-            // Run through the game object list and grab all that are in the current space-time location
+            // run through the game object list and grab all that are in the current space-time location
             //
-            foreach (LessonObject lessonObject in _lessonObject)
+            foreach (ForestObjects forestObject in _forestObjects)
             {
-                if (lessonObject.BlackForestLocationId == forestTimeLocationId)
+                if (forestObject.BlackForestLocationId == balckForestTimeLocationId)
                 {
-                    lessonObjects.Add(lessonObject);
+                    forestObjects.Add(forestObject);
                 }
             }
-            return lessonObjects;
+
+            return forestObjects;
         }
 
         public List<TraineeObject> GetTraineeObjectsByBlackForestTimeLocationId(int blackForestTimeLocationId)
@@ -272,16 +308,17 @@ namespace TheBlackForest
             //
             // Run through the object list and grab all that are in the current balck forest time location
             //
-            foreach (LessonObject lessonObject in _lessonObject)
+            foreach (ForestObjects forestObjects in _forestObjects)
             {
-                if (lessonObject.BlackForestLocationId == blackForestTimeLocationId && lessonObject is TraineeObject)
+                if (forestObjects.BlackForestLocationId == blackForestTimeLocationId && forestObjects is TraineeObject)
                 {
-                    traineeObjects.Add(lessonObject as TraineeObject);
+                    traineeObjects.Add(forestObjects as TraineeObject);
                 }
             }
 
             return traineeObjects;
         }
+
         #endregion
     }
 }

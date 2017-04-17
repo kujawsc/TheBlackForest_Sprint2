@@ -59,8 +59,8 @@ namespace TheBlackForest
             // Add initial items to the trainee inventory
             //
 
-            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetLessonObjectById(8) as TraineeObject);
-            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetLessonObjectById(9) as TraineeObject);
+            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetForestObjectById(8) as TraineeObject);
+            _gameTrainee.TraineeInventory.Add(_gameBlackForest.GetForestObjectById(9) as TraineeObject);
 
             Console.CursorVisible = false;
         }
@@ -99,7 +99,7 @@ namespace TheBlackForest
             //
             // prepare game play screen
             //
-            _currentLocation = _gameBlackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            _currentLocation = _gameBlackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
             _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(), ActionMenu.MainMenu, "");
             //
             // game loop
@@ -118,7 +118,7 @@ namespace TheBlackForest
                 }
                 else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.AdminMenu)
                 {
-                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
                 }
                 //
                 // choose an action based on the player's menu choice
@@ -160,12 +160,12 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayTraineeInventory();
                         break;
 
-                    case TraineeAction.ListBlackForestLocations:
-                        _gameConsoleView.DisplayListOfForestTimeLocations();
+                    case TraineeAction.ListOfBlackForestLocations:
+                        _gameConsoleView.DisplayListOfBlackForestTimeLocations();
                         break;
 
-                    case TraineeAction.ListLessonObjects:
-                        _gameConsoleView.DisplayListOfAllLessonObjects();
+                    case TraineeAction.ListForestObjects:
+                        _gameConsoleView.DisplayListOfAllForestObjects();
                         break;
 
                     case TraineeAction.AdminMenu:
@@ -173,7 +173,7 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayGamePlayScreen("Admin Menu", "Select an operation from the menu.", ActionMenu.AdminMenu, "");
                         break;
 
-                    case TraineeAction.RetrunToMainMenu:
+                    case TraineeAction.ReturnToMainMenu:
                         ActionMenu.currentMenu = ActionMenu.CurrentMenu.MainMenu;
                         _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(_currentLocation), ActionMenu.MainMenu, "");
                         break;
@@ -239,7 +239,7 @@ namespace TheBlackForest
                 //
                 // get the game object from the universe
                 //
-                TraineeObject traineeObject = _gameBlackForest.GetLessonObjectById(traineeObjectToPickUpId) as TraineeObject;
+                TraineeObject traineeObject = _gameBlackForest.GetForestObjectById(traineeObjectToPickUpId) as TraineeObject;
 
                 //
                 // note: traveler object is added to list and the space-time location is set to 0
@@ -264,7 +264,7 @@ namespace TheBlackForest
             //
             // get the game object from the universe
             //
-            TraineeObject traineeObject = _gameBlackForest.GetLessonObjectById(traineeInventoryObjectToPutDownId) as TraineeObject;
+            TraineeObject traineeObject = _gameBlackForest.GetForestObjectById(traineeInventoryObjectToPutDownId) as TraineeObject;
 
             //
             // remove the object from inventory and set the space-time location to the current value
@@ -285,7 +285,7 @@ namespace TheBlackForest
             // get new location choice and update the current location property
             //                        
             _gameTrainee.BlackForestTimeLocationID = _gameConsoleView.DisplayGetNextForestTimeLocation();
-            _currentLocation = _gameBlackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            _currentLocation = _gameBlackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
 
             //
             // display the new space-time location info
@@ -296,24 +296,24 @@ namespace TheBlackForest
         private void LookAtAction()
         {
             //
-            // display a list of lesson objects in black forst time location and get a player choice
+            // display a list of forest objects in black forest time location and get a player choice
             //
-            int lessonObjectToLookAtId = _gameConsoleView.DisplayGetLessonObjectToLookAt();
+            int forestObjectsToLookAtId = _gameConsoleView.DisplayGetForestObjectsToLookAt();
 
             //
             // display game object info
             //
-            if (lessonObjectToLookAtId != 0)
+            if (forestObjectsToLookAtId != 0)
             {
                 //
                 // get the game object from the universe
                 //
-                LessonObject lessonObject = _gameBlackForest.GetLessonObjectById(lessonObjectToLookAtId);
+                ForestObjects forestObjects = _gameBlackForest.GetForestObjectById(forestObjectsToLookAtId);
 
                 //
                 // display information for the object chosen
                 //
-                _gameConsoleView.DisplayLessonObjectInfo(lessonObject);
+                _gameConsoleView.DisplayGameObjectInfo(forestObjects);
             }
         }
 

@@ -166,27 +166,73 @@ namespace TheBlackForest
             {
                 if (int.TryParse(Console.ReadLine(), out integerChoice))
                 {
-                    if (integerChoice >= minimumValue && integerChoice <= maximumValue)
+                    if (validateRange)
+                    {
+                        if (integerChoice >= minimumValue && integerChoice <= maximumValue)
+                        {
+                            validResponse = true;
+                        }
+                        else
+                        {
+                            ClearInputBox();
+                            DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                            DisplayInputBoxPrompt(prompt);
+                        }
+                    }
+                    else
+                    {
+                        validResponse = true;
+                    }
+                }
+                else
+                {
+                    ClearInputBox();
+                    DisplayInputErrorMessage($"You must enter an interger value. Please try again.");
+                    DisplayInputBoxPrompt(prompt);
+                }
+            }
+
+            Console.CursorVisible = false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// get an integer value from the user
+        /// </summary>
+        /// <returns>integer value</returns>
+        public bool GetDouble(string prompt, double minimumValue, double maximumValue, out double doubleChoice)
+        {
+            bool validResponse = false;
+            doubleChoice = 0;
+
+            DisplayInputBoxPrompt(prompt);
+            while (!validResponse)
+            {
+                if (double.TryParse(Console.ReadLine(), out doubleChoice))
+                {
+                    if (doubleChoice >= minimumValue && doubleChoice <= maximumValue)
                     {
                         validResponse = true;
                     }
                     else
                     {
                         ClearInputBox();
-                        DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                        DisplayInputErrorMessage($"You must enter an number value between {minimumValue} and {maximumValue}. Please try again.");
                         DisplayInputBoxPrompt(prompt);
                     }
                 }
                 else
                 {
                     ClearInputBox();
-                    DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                    DisplayInputErrorMessage($"You must enter an number value between {minimumValue} and {maximumValue}. Please try again.");
                     DisplayInputBoxPrompt(prompt);
                 }
             }
 
             return true;
         }
+
         /// <summary>
         /// get a character race value from the user
         /// </summary>
@@ -252,6 +298,8 @@ namespace TheBlackForest
             // control the console window properties
             //
             ConsoleWindowControl.DisableResize();
+            ConsoleWindowControl.DisableMaximize();
+            ConsoleWindowControl.DisableMinimize();
             Console.Title = "The Black Forest";
 
             //
@@ -262,6 +310,10 @@ namespace TheBlackForest
             Console.CursorVisible = false;
         }
 
+        /// <summary>
+        /// display the correct menu in the menu box of the game screen
+        /// </summary>
+        /// <param name="menu">menu for current game state</param>
         private void DisplayMenuBox(Menu menu)
         {
             Console.BackgroundColor = ConsoleTheme.MenuBackgroundColor;
@@ -302,6 +354,11 @@ namespace TheBlackForest
             }
         }
 
+        /// <summary>
+        /// display the text in the message box of the game screen
+        /// </summary>
+        /// <param name="headerText"></param>
+        /// <param name="messageText"></param>
         private void DisplayMessageBox(string headerText, string messageText)
         {
             //
@@ -428,13 +485,42 @@ namespace TheBlackForest
             Console.CursorVisible = true;
         }
 
+        /// <summary>
+        /// display the error message in the input box of the game screen
+        /// </summary>
+        /// <param name="errorMessage">error message text</param>
+        public void DisplayInputErrorMessage(string errorMessage)
+        {
+            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 2);
+            Console.ForegroundColor = ConsoleTheme.InputBoxErrorMessageForegroundColor;
+            Console.Write(errorMessage);
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            Console.CursorVisible = true;
+        }
 
+        /// <summary>
+        /// clear the input box
+        /// </summary>
+        private void ClearInputBox()
+        {
+            string backgroundColorString = new String(' ', ConsoleLayout.InputBoxWidth - 4);
 
+            Console.ForegroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            for (int row = 1; row < ConsoleLayout.InputBoxHeight - 2; row++)
+            {
+                Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + row);
+                DisplayInputBoxPrompt(backgroundColorString);
+            }
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+        }
+
+        /// <summary>
+        /// display the error message in the input box of the game screen
+        /// </summary>
+        /// <param name="errorMessage">error message text</param>
         public Trainee GetIntitialTraineeInfo()
         {
             Trainee trainee = new Trainee();
-            Character character = new Character();
-
 
             //
             // intro
@@ -480,12 +566,13 @@ namespace TheBlackForest
             DisplayInputBoxPrompt($"Enter your laguage {trainee.FirstName}: ");
             trainee.Language = GetLanguage();
 
-            /*//
+            /*
+            //
             //get trainee answer if they are immortal
             //
             DisplayGamePlayScreen("Mission Initialization - is immortal", Text.InitializeMissionGetIsImmortal(trainee), ActionMenu.MissionIntro, "");
             DisplayInputBoxPrompt("Enter your immortality status: ");
-            trainee.IsImmortal = trainee.IsImmortal; */
+            trainee.IsImmortal = Get; */
 
             //
             // echo the traveler's info
@@ -502,8 +589,14 @@ namespace TheBlackForest
 
         public void DisplayTraineeInfo()
         {
-            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
-            DisplayGamePlayScreen("Trainee Information", Text.TraineeInfo(_gameTrainee), ActionMenu.MainMenu, "");
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            DisplayGamePlayScreen("Trainee Information", Text.TraineeInfo(_gameTrainee, currentForestTimeLocation), ActionMenu.MainMenu, "");
+        }
+
+        public void DisplayCurrentLocationInfo()
+        {
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(currentForestTimeLocation), ActionMenu.MainMenu, "");
         }
 
         public void DisplayConfirmTraineeObjectRemovedFromInventory(TraineeObject objectRemovedFromTraineeInventory)
@@ -511,84 +604,76 @@ namespace TheBlackForest
             DisplayGamePlayScreen("Put Down Game Object", $"The {objectRemovedFromTraineeInventory.Name} has been removed from your inventory.", ActionMenu.MainMenu, "");
         }
 
-        #endregion
-
-        /// <summary>
-        /// clear the input box
-        /// </summary>
-        private void ClearInputBox()
+        public void DisplayListOfAllForestObjects()
         {
-            string backgroundColorString = new String(' ', ConsoleLayout.InputBoxWidth - 4);
-
-            Console.ForegroundColor = ConsoleTheme.InputBoxBackgroundColor;
-            for (int row = 1; row < ConsoleLayout.InputBoxHeight - 2; row++)
-            {
-                Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + row);
-                DisplayInputBoxPrompt(backgroundColorString);
-            }
-            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            DisplayGamePlayScreen("List: Forest Objects", Text.ListAllForestObjects(_blackForest.ForestObjects), ActionMenu.AdminMenu, "");
         }
 
-        /// <summary>
-        /// display the error message in the input box of the game screen
-        /// </summary>
-        /// <param name="errorMessage">error message text</param>
-        public void DisplayInputErrorMessage(string errorMessage)
+        public void DisplayListOfBlackForestTimeLocations()
         {
-            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 2);
-            Console.ForegroundColor = ConsoleTheme.InputBoxErrorMessageForegroundColor;
-            Console.Write(errorMessage);
-            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
-            Console.CursorVisible = true;
+            DisplayGamePlayScreen("List: Forest Time Locations", Text.ListAllBlackForestLocations(_blackForest.ForestTimeLocations), ActionMenu.AdminMenu, "");
+        }
+       
+        public void DisplayConfirmTraineeObjectAddedToTraineeInventory(TraineeObject objectAddedToTraineeInventory)
+        {
+            DisplayGamePlayScreen("Pick Up Lesson Object", $"The {objectAddedToTraineeInventory.Name} has been added to your inventory.", ActionMenu.MainMenu, "");
         }
 
-        public void DisplayListOfForestTimeLocations()
+        public void DisplayTraineeInventory()
         {
-            DisplayGamePlayScreen("List: Forest Time Locations", Text.ListBlackForestLocations(_blackForest.ForestTimeLocations), ActionMenu.AdminMenu, "");
+            DisplayGamePlayScreen("Current Inventory", Text.CurrentTraineeInventory(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
+        }
+
+        public void DisplayGameObjectInfo(ForestObjects forestObjects)
+        {
+            DisplayGamePlayScreen("Current Location", Text.LookAt(forestObjects), ActionMenu.MainMenu, "");
         }
 
         public void DisplayLookAround()
         {
-            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
+            //
+            // Get current balck forest time location
+            //
+            ForestTimeLocation currentForestTimeLocation = _blackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
 
             //
-            // Get list of lesson object in surrent black forest time location
+            // Get list of forest object in surrent black forest time location
             //
-            List<LessonObject> lessonObjectsInCurrentBlackForestTimeLocation = _blackForest.GetLessonObjectsByForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
+            List<ForestObjects> forestObjectsInCurrentBlackForestTimeLocation = _blackForest.GetForestObjectsByBlackForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
 
             string messageBoxText = Text.LookAround(currentForestTimeLocation) + Environment.NewLine + Environment.NewLine;
-            messageBoxText += Text.LessonObjectsChooseList(lessonObjectsInCurrentBlackForestTimeLocation);
+            messageBoxText += Text.ForestObjectsChooseList(forestObjectsInCurrentBlackForestTimeLocation);
 
-            DisplayGamePlayScreen("Current Location", Text.LookAround(currentForestTimeLocation), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Current Location", messageBoxText, ActionMenu.MainMenu, "");
         }
 
-        public int DisplayGetLessonObjectToLookAt()
+        public int DisplayGetForestObjectsToLookAt()
         {
-            int lessonObjectId = 0;
-            bool validLessonObjectId = false;
+            int forestObjecstId = 0;
+            bool validForestObjectsId = false;
 
             //
-            // Get a list of lesson objects in the current forest time location
+            // Get a list of forest objects in the current forest time location
             //
-            List<LessonObject> lessonObjectsInBlackForestTimeLocation = _blackForest.GetLessonObjectsByForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
+            List<ForestObjects> forestObjectsInBlackForestTimeLocation = _blackForest.GetForestObjectsByBlackForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
 
-            if (lessonObjectsInBlackForestTimeLocation.Count > 0)
+            if (forestObjectsInBlackForestTimeLocation.Count > 0)
             {
-                DisplayGamePlayScreen("Look at a Object", Text.ListAllLessonObjects(lessonObjectsInBlackForestTimeLocation), ActionMenu.MainMenu, "");
+                DisplayGamePlayScreen("Look at a Objects", Text.ListAllForestObjects(forestObjectsInBlackForestTimeLocation), ActionMenu.MainMenu, "");
 
-                while (!validLessonObjectId)
+                while (!validForestObjectsId)
                 {
                     //
                     // Get an interger fromthe player
                     //
-                    GetInteger($"Enter the Id number of the object you wish to look at: ", 0, 0, out lessonObjectId);
+                    GetInteger($"Enter the Id number of the object you wish to look at: ", 0, 0, out forestObjecstId);
 
                     //
                     // Validate integer as a calling game object is and in current location
                     //
-                    if (_blackForest.IsVaidLessonObjectByLocationId(lessonObjectId, _gameTrainee.BlackForestTimeLocationID))
+                    if (_blackForest.IsValidForestObjectByLocationId(forestObjecstId, _gameTrainee.BlackForestTimeLocationID))
                     {
-                        validLessonObjectId = true;
+                        validForestObjectsId = true;
                     }
                     else
                     {
@@ -601,19 +686,13 @@ namespace TheBlackForest
             {
                 DisplayGamePlayScreen("Look at a Object", "It appears there are no game objects here.", ActionMenu.MainMenu, "");
             }
-            return lessonObjectId;
-        }
-
-        public void DisplayCurrentLocationInfo()
-        {
-            ForestTimeLocation currentForestTimeLocation = _blackForest.GetForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
-            DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(currentForestTimeLocation), ActionMenu.MainMenu, "");
+            return forestObjecstId;
         }
 
         public int DisplayGetTraineeObjectToPickUp()
         {
-            int lessonObjectId = 0;
-            bool validLessonObjectId = false;
+            int forestObjectsId = 0;
+            bool validForestObjectsId = false;
 
             //
             // Get a list of trainee objects in the current balck forest time location
@@ -622,24 +701,24 @@ namespace TheBlackForest
 
             if (traineeObjectInBlackForestTimeLocation.Count > 0)
             {
-                DisplayGamePlayScreen("Pick Up Lesson Object", Text.LessonObjectsChooseList(traineeObjectInBlackForestTimeLocation), ActionMenu.MainMenu, "");
+                DisplayGamePlayScreen("Pick Up Lesson Object", Text.ForestObjectsChooseList(traineeObjectInBlackForestTimeLocation), ActionMenu.MainMenu, "");
 
-                while (!validLessonObjectId)
+                while (!validForestObjectsId)
                 {
                     //
                     // Get an integer from the player
                     //
-                    GetInteger($"Enter the Id number of the object you wish to add to your inventory: ", 0, 0, out lessonObjectId);
+                    GetInteger($"Enter the Id number of the object you wish to add to your inventory: ", 0, 0, out forestObjectsId);
 
                     //
                     // Validate integer as a valid lesson object id and in current location
                     //
-                    if (_blackForest.IsValidTraineeObjectByLocationId(lessonObjectId, _gameTrainee.BlackForestTimeLocationID))
+                    if (_blackForest.IsValidTraineeObjectByLocationId(forestObjectsId, _gameTrainee.BlackForestTimeLocationID))
                     {
-                        TraineeObject traineeObject = _blackForest.GetLessonObjectById(lessonObjectId) as TraineeObject;
+                        TraineeObject traineeObject = _blackForest.GetForestObjectById(forestObjectsId) as TraineeObject;
                         if (traineeObject.CanInventory)
                         {
-                            validLessonObjectId = true;
+                            validForestObjectsId = true;
                         }
                         else
                         {
@@ -659,7 +738,7 @@ namespace TheBlackForest
                 DisplayGamePlayScreen("Pick Up Lesson Object", "It appears there are no lesson objects here.", ActionMenu.MainMenu, "");
             }
 
-            return lessonObjectId;
+            return forestObjectsId;
         }
 
         public int DisplayGetTraineeInventoryObjectToPutDown()
@@ -669,7 +748,7 @@ namespace TheBlackForest
 
             if (_gameTrainee.TraineeInventory.Count > 0)
             {
-                DisplayGamePlayScreen("Put Down Game Object", Text.LessonObjectsChooseList(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
+                DisplayGamePlayScreen("Put Down Game Object", Text.ForestObjectsChooseList(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
 
                 while (!validTraineeInventoryObjectId)
                 {
@@ -706,30 +785,15 @@ namespace TheBlackForest
             return traineeObjectId;
         }
 
-        public void DisplayConfirmTraineeObjectAddedToTraineeInventory(TraineeObject objectAddedToTraineeInventory)
-        {
-            DisplayGamePlayScreen("Pick Up Lesson Object", $"The {objectAddedToTraineeInventory.Name} has been added to your inventory.", ActionMenu.MainMenu, "");
-        }
-
-        public void DisplayLessonObjectInfo(LessonObject lessonObject)
-        {
-            DisplayGamePlayScreen("Current Location", Text.LookAt(lessonObject), ActionMenu.MainMenu, "");
-        }
-
         public void DisplayLocationsVisited()
         {
             List<ForestTimeLocation> visitedBlackForestTimeLocations = new List<ForestTimeLocation>();
-            foreach (int forestTimeLocationID in _gameTrainee.ForestTimeLocationsVisited)
+            foreach (int forestTimeLocationId in _gameTrainee.ForestTimeLocationsVisited)
             {
-                visitedBlackForestTimeLocations.Add(_blackForest.GetForestTimeLocationById(forestTimeLocationID));
+                visitedBlackForestTimeLocations.Add(_blackForest.GetBlackForestTimeLocationById(forestTimeLocationId));
             }
 
-            DisplayGamePlayScreen("Forest-Time Locations Visited", Text.VisitedLocations(visitedBlackForestTimeLocations), ActionMenu.MainMenu, "");
-        }
-
-        public void DisplayListOfAllLessonObjects()
-        {
-            DisplayGamePlayScreen("List: Lesson Objects", Text.ListAllLessonObjects(_blackForest.LessonObject), ActionMenu.AdminMenu, "");
+            DisplayGamePlayScreen("Forest Time Locations Visited", Text.VisitedLocations(visitedBlackForestTimeLocations), ActionMenu.MainMenu, "");
         }
 
         public int DisplayGetNextForestTimeLocation()
@@ -744,12 +808,12 @@ namespace TheBlackForest
                 //
                 // Get an interger from the player
                 //
-                GetInteger($"Enter your new location {_gameTrainee.FirstName}: ", 1, _blackForest.GetMaxForestTimeLocationId(), out forestTimeLocationId);
+                GetInteger($"Enter your new location {_gameTrainee.FirstName}: ", 1, _blackForest.GetMaxBlackForestTimeLocationId(), out forestTimeLocationId);
 
                 //
                 // Validate integer as a calid space-time locations id and determine accessibility
                 //
-                if (_blackForest.IsValidForestTimeLocationId(forestTimeLocationId))
+                if (_blackForest.IsValidBlackForestTimeLocationId(forestTimeLocationId))
                 {
                     if (_blackForest.IsAccessibleLocation(forestTimeLocationId))
                     {
@@ -770,11 +834,7 @@ namespace TheBlackForest
             return forestTimeLocationId;
         }
 
-        public void DisplayTraineeInventory()
-        {
-            DisplayGamePlayScreen("Current Inventory", Text.CurrentTraineeInventory(_gameTrainee.TraineeInventory), ActionMenu.MainMenu, "");
-        }
+        #endregion
+        #endregion
     }
-
-    #endregion
 }

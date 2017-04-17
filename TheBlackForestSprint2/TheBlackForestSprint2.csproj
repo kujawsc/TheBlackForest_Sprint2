@@ -53,10 +53,11 @@
     <Compile Include="ConsoleUtilities\ConsoleWindowHelper.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Models\BlackForest.cs" />
-    <Compile Include="Models\BlackForestTimeLocation.cs" />
+    <Compile Include="Models\BlackForestTimeLocationObjects.cs" />
+    <Compile Include="Views\BlackForestTimeLocation.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Enum\TraineeObjectType.cs" />
-    <Compile Include="Models\LessonObject.cs" />
+    <Compile Include="Models\ForestObjects.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\Trainee.cs" />
     <Compile Include="Models\Enum\TraineeAction.cs" />

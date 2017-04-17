@@ -8,7 +8,7 @@ namespace TheBlackForest
 {
     public static partial class BlackForestObjects
     {
-        public static List<LessonObject> lessonObject = new List<LessonObject>()
+        public static List<ForestObjects> forestObjects = new List<ForestObjects>()
         {
             new TraineeObject
             {
@@ -134,6 +134,24 @@ namespace TheBlackForest
                 CanInventory = true,
                 IsConsumable = true,
                 IsVisible = true
+            },
+
+                 new BlackForestTimeLocationObjects
+            {
+                Id = 5,
+                Name = "Boldendorian Chest",
+               BlackForestLocationId = 2,
+                Description = "A large wooden chest adorned with potions.",
+                IsDeadly = true
+            },
+
+            new BlackForestTimeLocationObjects
+            {
+                Id = 6,
+                Name = "Silver Mirror",
+                BlackForestLocationId = 2,
+                Description = "A small silver mirror hanging on the wall next to a small window.",
+                IsDeadly = true
             },
         };
     }
