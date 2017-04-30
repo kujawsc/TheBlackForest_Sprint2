@@ -91,7 +91,7 @@ namespace TheBlackForest
             _gameConsoleView.GetContinueKey();
 
             //
-            // initialize the mission traveler
+            // initialize the mission trainee
             // 
             InitializeMission();
 
@@ -111,6 +111,7 @@ namespace TheBlackForest
                 //
                 // get next game action from player
                 //
+                traineeActionChoice = GetNextTraineeAction();
                 if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.MainMenu)
                 {
                     traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
@@ -155,6 +156,10 @@ namespace TheBlackForest
                         PutDownAction();
                         break;
 
+                    case TraineeAction.TalkTo:
+                        TalkToAction();
+                        break;
+
                     case TraineeAction.TraineeInventory:
                         _gameConsoleView.DisplayTraineeInventory();
                         break;
@@ -167,6 +172,21 @@ namespace TheBlackForest
                         _gameConsoleView.DisplayListOfAllForestObjects();
                         break;
 
+                    case TraineeAction.TraineeMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.TraineeMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Trainee Menu", "Select an operation from the menu.", ActionMenu.TraineeMenu, "");
+                        break;
+
+                    case TraineeAction.ObjectMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.ObjectMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Object Menu", "Select an operation from the menu.", ActionMenu.ObjectMenu, "");
+                        break;
+
+                    case TraineeAction.NonplayerCharacterMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.NpcMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("NPC Menu", "Select an operation from the menu.", ActionMenu.NpcMenu, "");
+                        break;
+
                     case TraineeAction.AdminMenu:
                         ActionMenu.currentMenu = ActionMenu.CurrentMenu.AdminMenu;
                         _gameConsoleView.DisplayGamePlayScreen("Admin Menu", "Select an operation from the menu.", ActionMenu.AdminMenu, "");
@@ -175,6 +195,10 @@ namespace TheBlackForest
                     case TraineeAction.ReturnToMainMenu:
                         ActionMenu.currentMenu = ActionMenu.CurrentMenu.MainMenu;
                         _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.CurrentLocationInfo(_currentLocation), ActionMenu.MainMenu, "");
+                        break;
+
+                    case TraineeAction.ListNonplayerTrainee:
+                        _gameConsoleView.DisplayListOfAllNpcObjects();
                         break;
 
                     case TraineeAction.Exit:
@@ -192,6 +216,42 @@ namespace TheBlackForest
             Environment.Exit(1);
         }
 
+        /// <summary>
+        /// Display the correct menu/sub-menu and get the next trainee action
+        /// </summary>
+        /// <returns>trainee action</returns>
+        private TraineeAction GetNextTraineeAction()
+        {
+            TraineeAction traineeActionChoice = TraineeAction.None;
+
+            switch (ActionMenu.currentMenu)
+            {
+                case ActionMenu.CurrentMenu.MainMenu:
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                    break;
+
+                case ActionMenu.CurrentMenu.ObjectMenu:
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.ObjectMenu);
+                    break;
+
+                case ActionMenu.CurrentMenu.NpcMenu:
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.NpcMenu);
+                    break;
+
+                case ActionMenu.CurrentMenu.TraineeMenu:
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TraineeMenu);
+                    break;
+
+                case ActionMenu.CurrentMenu.AdminMenu:
+                    traineeActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
+                    break;
+
+                default:
+                    break;
+            }
+
+            return traineeActionChoice;
+        }
         private void InitializeMission()
         {
             Trainee trainee = _gameConsoleView.GetIntitialTraineeInfo();
@@ -226,22 +286,22 @@ namespace TheBlackForest
         private void PickUpAction()
         {
             //
-            // display a list of traveler objects in space-time location and get a player choice
+            // display a list of trainee objects in balc forest time location and get a player choice
             //
             int traineeObjectToPickUpId = _gameConsoleView.DisplayGetTraineeObjectToPickUp();
 
             //
-            // add the traveler object to traveler's inventory
+            // add the trainee object to trainee's inventory
             //
             if (traineeObjectToPickUpId != 0)
             {
                 //
-                // get the game object from the universe
+                // get the game object from the black forest
                 //
                 TraineeObject traineeObject = _gameBlackForest.GetForestObjectById(traineeObjectToPickUpId) as TraineeObject;
 
                 //
-                // note: traveler object is added to list and the space-time location is set to 0
+                // note: trainee object is added to list and the balck forest time location is set to 0
                 //
                 _gameTrainee.TraineeInventory.Add(traineeObject);
                 traineeObject.BlackForestLocationId = 0;
@@ -256,17 +316,17 @@ namespace TheBlackForest
         private void PutDownAction()
         {
             //
-            // display a list of traveler objects in inventory and get a player choice
+            // display a list of trainee objects in inventory and get a player choice
             //
             int traineeInventoryObjectToPutDownId = _gameConsoleView.DisplayGetTraineeInventoryObjectToPutDown();
 
             //
-            // get the game object from the universe
+            // get the game object from the black forest
             //
             TraineeObject traineeObject = _gameBlackForest.GetForestObjectById(traineeInventoryObjectToPutDownId) as TraineeObject;
 
             //
-            // remove the object from inventory and set the space-time location to the current value
+            // remove the object from inventory and set the black forest time location to the current value
             //
             _gameTrainee.TraineeInventory.Remove(traineeObject);
             traineeObject.BlackForestLocationId = _gameTrainee.BlackForestTimeLocationID;
@@ -278,6 +338,9 @@ namespace TheBlackForest
 
         }
 
+        /// <summary>
+        /// process the Trainee action
+        /// </summary>
         private void TraineAction()
         {
             //
@@ -287,7 +350,7 @@ namespace TheBlackForest
             _currentLocation = _gameBlackForest.GetBlackForestTimeLocationById(_gameTrainee.BlackForestTimeLocationID);
 
             //
-            // display the new space-time location info
+            // display the new balck forest time location info
             //
             _gameConsoleView.DisplayCurrentLocationInfo();
         }
@@ -305,7 +368,7 @@ namespace TheBlackForest
             if (forestObjectsToLookAtId != 0)
             {
                 //
-                // get the game object from the universe
+                // get the game object from the black forest
                 //
                 ForestObjects forestObjects = _gameBlackForest.GetForestObjectById(forestObjectsToLookAtId);
 
@@ -316,6 +379,29 @@ namespace TheBlackForest
             }
         }
 
+            private void TalkToAction()
+        {
+            //
+            // Display a list of NPCs in black forest location and get player chice
+            //
+            int npcToTalkToId = _gameConsoleView.DisplayGetNpcToTalkTo();
+
+            //
+            // Display NPCs message
+            //
+            if (npcToTalkToId != 0)
+            {
+                //
+                // Get the NPC from the universe
+                //
+                Npc npc = _gameBlackForest.GetNpcById(npcToTalkToId);
+
+                //
+                // Display information for the object chosen
+                //
+                _gameConsoleView.DisplayTalkTo(npc);
+            }
+        }
         #endregion
     }
 }

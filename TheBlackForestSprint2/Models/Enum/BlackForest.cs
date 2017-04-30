@@ -14,10 +14,11 @@ namespace TheBlackForest
         #region ***** define all lists to be maintained by the Black Forest object *****
 
         //
-        // list of all forest-time location
+        // List of all baclforest time location, game, and NPC objects
         //
         private List<ForestTimeLocation> _forestTimeLocations;
         private List<ForestObjects> _forestObjects;
+        private List<Npc> _npcs;
 
         public List<ForestTimeLocation> ForestTimeLocations
         {
@@ -29,6 +30,12 @@ namespace TheBlackForest
         {
             get { return _forestObjects; }
             set { _forestObjects = value; }
+        }
+
+        public List<Npc> Npcs
+        {
+            get { return _npcs; }
+            set { _npcs = value; }
         }
 
         #endregion
@@ -57,6 +64,7 @@ namespace TheBlackForest
         {
             _forestTimeLocations = BlackForestObjects.ForestTimeLocation;
             _forestObjects = BlackForestObjects.forestObjects;
+            _npcs = BlackForestObjects.Npcs;
         }
 
         #endregion
@@ -179,6 +187,38 @@ namespace TheBlackForest
             }
         }
 
+        ///<summary>
+        /// Validate NPC objects id number in current location
+        /// </summary>
+        /// <returns> is Id valid</returns>
+        public bool IsValidNpcByLocationId(int npcsId, int currentBlackForestTimeLocation)
+        {
+            List<int> npcIds = new List<int>();
+
+            //
+            // Create a list of NPC ids in current black forest time location
+            //
+            foreach (Npc npc in _npcs)
+            {
+                if (npc.BlackForestTimeLocationID == currentBlackForestTimeLocation)
+                {
+                    npcIds.Add(npc.Id);
+                }
+            }
+
+            //
+            // Determine of the game object id is a valid id and return the result
+            //
+            if (npcIds.Contains(npcsId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// return the next available ID for a Black Forest-Time Location object
         /// </summary>
@@ -282,6 +322,44 @@ namespace TheBlackForest
             return forestObjectToReturn;
         }
 
+        /// <summary>
+        /// Get a Npc object using an Id
+        /// </summary>
+        /// <param name="Id">game object Id</param>
+        /// <returns>requested game object</returns>
+        public Npc GetNpcById (int Id)
+        {
+            Npc npcToReturn = null;
+
+            //
+            // Run through the NPC objects list and grab the correct one
+            //
+            foreach (Npc npc in _npcs)
+            {
+                if (npc.Id == Id)
+                {
+                    npcToReturn = npc;
+                }
+            }
+
+            //
+            // The speciafied ID was not found in the black forest
+            // Throw and exception
+            //
+            if (npcToReturn == null)
+            {
+                string feebackMessage = $"The NPC ID {Id} does not exist in the current Universe.";
+                throw new ArgumentException(Id.ToString(), feebackMessage);
+            }
+
+            return npcToReturn;
+        }
+
+        /// <summary>
+        ///  Get all the forest object in a location
+        /// </summary>
+        /// <param name="balckForestTimeLocationId"></param>
+        /// <returns></returns>
         public List<ForestObjects> GetForestObjectsByBlackForestTimeLocationId(int balckForestTimeLocationId)
         {
             List<ForestObjects> forestObjects = new List<ForestObjects>();
@@ -300,6 +378,11 @@ namespace TheBlackForest
             return forestObjects;
         }
 
+        /// <summary>
+        /// Get all trainee objects in a location
+        /// </summary>
+        /// <param name="blackForestTimeLocationId"></param>
+        /// <returns></returns>
         public List<TraineeObject> GetTraineeObjectsByBlackForestTimeLocationId(int blackForestTimeLocationId)
         {
             List<TraineeObject> traineeObjects = new List<TraineeObject>();
@@ -316,6 +399,87 @@ namespace TheBlackForest
             }
 
             return traineeObjects;
+        }
+
+        /// <summary>
+        /// Get all NPC balc forest objecy in a location
+        /// </summary>
+        /// <param name="blackForestTimeLocationId"></param>
+        /// <returns></returns>
+        public List<Npc> GetNpcsByBlackForestLocationId(int blackForestTimeLocationId)
+        {
+            List<Npc> npcs = new List<Npc>();
+
+            //
+            // Run through the NPC object list and grab all that are in the current black forest time location
+            //
+            foreach (Npc npc in _npcs)
+            {
+                if (npc.BlackForestTimeLocationID == blackForestTimeLocationId)
+                {
+                    npcs.Add(npc);
+                }
+            }
+
+            return npcs;
+        }
+
+        public void UpdateGameObjectLocationID(int forestObjectID, int newLocationId)
+        {
+            ForestObjects forestObjectToUpdate;
+            forestObjectToUpdate = GetForestObjectById(forestObjectID);
+            forestObjectToUpdate.BlackForestLocationId = newLocationId;
+        }
+
+        /// <summary>
+        /// resets the forest objects to their starting locations for resetting the game
+        /// </summary>
+        public void ResetGameObjectsAll()
+        {
+            UpdateGameObjectLocationID(1, 1);
+            UpdateGameObjectLocationID(2, 2);
+            UpdateGameObjectLocationID(3, 8);
+            UpdateGameObjectLocationID(4, 5);
+            UpdateGameObjectLocationID(5, 3);
+            UpdateGameObjectLocationID(6, 1);
+            UpdateGameObjectLocationID(7, 3);
+        }
+
+        public void UpdateBalckForestLocationAccessible(int blackForestLocationId, bool accessible)
+        {
+            ForestTimeLocation blackForestLocationToUpdate;
+            blackForestLocationToUpdate = GetBlackForestTimeLocationById(blackForestLocationId);
+            blackForestLocationToUpdate.Accessable = accessible;
+        }
+
+        /// <summary>
+        /// resets the castle locations to their starting accessibility for resetting the game
+        /// </summary>
+        public void LocationAccessResetToGameStartAll()
+        {
+            UpdateBalckForestLocationAccessible(1, true);
+            UpdateBalckForestLocationAccessible(2, true);
+            UpdateBalckForestLocationAccessible(3, true);
+            UpdateBalckForestLocationAccessible(4, true);
+            UpdateBalckForestLocationAccessible(5, false);
+            UpdateBalckForestLocationAccessible(6, false);
+            UpdateBalckForestLocationAccessible(7, false);
+            UpdateBalckForestLocationAccessible(8, false);
+        }
+
+        /// <summary>
+        /// unlock all rooms
+        /// </summary>
+        public void LocationAccessUnlockAll()
+        {
+            UpdateBalckForestLocationAccessible(1, true);
+            UpdateBalckForestLocationAccessible(2, true);
+            UpdateBalckForestLocationAccessible(3, true);
+            UpdateBalckForestLocationAccessible(4, true);
+            UpdateBalckForestLocationAccessible(5, true);
+            UpdateBalckForestLocationAccessible(6, true);
+            UpdateBalckForestLocationAccessible(7, true);
+            UpdateBalckForestLocationAccessible(8, true);
         }
 
         #endregion

@@ -29,7 +29,6 @@ namespace TheBlackForest
 
         private string _lastName;
         private LanguageType _language;
-        /*private bool _isImmortal;*/
         private int _experiencePoints;
         private int _health;
         private int _lives;
@@ -52,12 +51,6 @@ namespace TheBlackForest
             get { return _language; }
             set { _language = value; }
         }
-
-        /*public bool IsImmortal
-        {
-            get { return _isImmortal; }
-            set { _isImmortal = value; }
-        }*/
 
         public int ExperiencePoints
         {

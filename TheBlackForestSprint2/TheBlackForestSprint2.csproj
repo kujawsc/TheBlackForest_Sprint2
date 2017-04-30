@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ActionMenu.cs" />
+    <Compile Include="Assets\TheBlackForestNpcs.cs" />
     <Compile Include="Assets\TheBlackForestObjectsLessonObjects.cs" />
     <Compile Include="Assets\TheBlackForestObjectsTimeLocation.cs" />
     <Compile Include="Assets\Text.cs" />
@@ -52,8 +53,11 @@
     <Compile Include="ConsoleUtilities\ConsoleWindowControl.cs" />
     <Compile Include="ConsoleUtilities\ConsoleWindowHelper.cs" />
     <Compile Include="Controllers\Controller.cs" />
-    <Compile Include="Models\BlackForest.cs" />
+    <Compile Include="Models\BFCivilian.cs" />
+    <Compile Include="Models\Enum\BlackForest.cs" />
     <Compile Include="Models\BlackForestTimeLocationObjects.cs" />
+    <Compile Include="Models\ISpeak.cs" />
+    <Compile Include="Models\Npc.cs" />
     <Compile Include="Views\BlackForestTimeLocation.cs" />
     <Compile Include="Models\Character.cs" />
     <Compile Include="Models\Enum\TraineeObjectType.cs" />

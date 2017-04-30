@@ -11,16 +11,26 @@ namespace TheBlackForest
         None,
         MissionSetup,
         LookAround,
-        LookAt,
-        PickUp,
-        PutDown,
         Travel,
+
+        TraineeMenu,
         TraineeInfo,
         TraineeInventory,
         TraineeLocationVisited,
-        ListForestObjects,
-        ListOfBlackForestLocations,
+
+        ObjectMenu,
+        LookAt,
+        PickUp,
+        PutDown,
+
+        NonplayerCharacterMenu,
+        TalkTo,
+
         AdminMenu,
+        ListOfBlackForestLocations,
+        ListForestObjects,
+        ListNonplayerTrainee,
+
         ReturnToMainMenu,
         Exit
     }

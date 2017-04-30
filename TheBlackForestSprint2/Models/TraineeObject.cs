@@ -13,9 +13,12 @@ namespace TheBlackForest
         public override string Description { get; set; }
         public override int BlackForestLocationId { get; set; }
         public TraineeObjectType Type { get; set; }
+        public int ExperiencePoints { get; set; }
         public bool CanInventory { get; set; }
         public bool IsConsumable { get; set; }
+        public bool IsPoisonous { get; set; }
         public bool IsVisible { get; set; }
+        public int HealthPoints { get; set; }
         public int Value { get; set; }
 
     }

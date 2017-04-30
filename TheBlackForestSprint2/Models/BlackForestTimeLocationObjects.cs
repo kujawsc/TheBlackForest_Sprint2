@@ -13,5 +13,7 @@ namespace TheBlackForest
         public override string Description { get; set; }
         public override int BlackForestLocationId { get; set; }
         public bool IsDeadly { get; set; }
+        public bool IsPoisonous { get; set; }
+        public int HealthPoints { get; set; }
     }
 }

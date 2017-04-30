@@ -132,53 +132,95 @@ namespace TheBlackForest
         /// get an integer value from the user
         /// </summary>
         /// <returns>integer value</returns>
-        /*public int GetInteger()
+        public bool? GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice)
         {
-            return int.Parse(Console.ReadLine());
-        }
-
-        /// <summary>
-        /// get an bool value from the user
-        /// </summary>
-        /// <returns></returns>
-        public bool GetBool()
-        {
-
-            return bool.Parse(Console.ReadLine());
-        }*/
-
-        /// <summary>
-        /// get an integer value from the user
-        /// </summary>
-        /// <returns>integer value</returns>
-        public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice)
-        {
+            //define variables
             bool validResponse = false;
+            bool validateRange = false;
             integerChoice = 0;
+            ConsoleKeyInfo keyPressed;
+            ConsoleKeyInfo secondKeyPressed;
+            string userChoiceToTryParse = "";
 
-            //
-            // Validate on tange either minimumValue and maximumValue are not 0
-            //
-            bool validateRange = (minimumValue != 0 || maximumValue != 0);
+            //Validate range only if both numbers are NOT zero
+            if (minimumValue != 0 || maximumValue != 0)
+            {
+                validateRange = true;
+            }
 
-            DisplayInputBoxPrompt(prompt);
+            //clear input box in case it contains a wrong choice from last time
+            ClearInputBoxUserInputOnly();
+            //Prompt user to enter an integer value
+            DisplayInputBoxPromptOrPressEscape(prompt);
+
+            //loop through until we have a valid integer
             while (!validResponse)
             {
-                if (int.TryParse(Console.ReadLine(), out integerChoice))
+                //get the keypressed without echoing it yet (in case it's the escape key)
+                //false means it won't show up on the screen
+                keyPressed = Console.ReadKey(false);
+
+                //if they press escape...
+                if (keyPressed.Key == ConsoleKey.Escape)
                 {
+                    //make GetInteger method null (will take user back to calling method)
+                    return null;
+                }
+                //otherwise, make sure the user's first key was a number...
+                else if (char.IsDigit(keyPressed.KeyChar))
+                {
+                    //make their choice show up on the screen now
+                    DisplayInputBoxPromptOrPressEscape(prompt, keyPressed.KeyChar.ToString());
+
+                    //then, wait for them to press the second key...
+                    secondKeyPressed = Console.ReadKey();
+
+                    //if they pressed backspace, they are changing their answer...
+                    if (secondKeyPressed.Key == ConsoleKey.Backspace)
+                    {
+                        //so clear their old answer
+                        ClearInputBox();
+                        DisplayInputBoxPromptOrPressEscape(prompt);
+                        //and do a ReadLine to get their choice
+                        //(wait till they press enter again)
+                        userChoiceToTryParse = Console.ReadLine();
+                    }
+                    //if they pressed enter as their second key, they want the
+                    //first key they pressed to be their choice...
+                    else if (secondKeyPressed.Key == ConsoleKey.Enter)
+                    {
+                        //so assign the first key they pressed to be their choice
+                        userChoiceToTryParse = keyPressed.KeyChar.ToString();
+                    }
+                }
+                //if the first key wasn't a number, let them know they need to put number keys only
+                else
+                {
+                    ClearInputBox();
+                    DisplayInputErrorMessage($"You must enter a number key. Please try again.");
+                    DisplayInputBoxPromptOrPressEscape(prompt);
+                }
+
+                //now that we have a string from user, try to parse it to an integer
+                if (int.TryParse(userChoiceToTryParse, out integerChoice))
+                {
+                    //if we put a range to validate...
                     if (validateRange)
                     {
+                        //validate the integer for being in the right range
                         if (integerChoice >= minimumValue && integerChoice <= maximumValue)
                         {
                             validResponse = true;
                         }
                         else
                         {
+                            //or display error message for integer not in the right range
                             ClearInputBox();
-                            DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                            DisplayInputBoxPrompt(prompt);
+                            DisplayInputErrorMessage($"You must enter a value between {minimumValue} and {maximumValue}. Please try again.");
+                            DisplayInputBoxPromptOrPressEscape(prompt);
                         }
                     }
+                    //validate the integer for being an integer
                     else
                     {
                         validResponse = true;
@@ -186,14 +228,15 @@ namespace TheBlackForest
                 }
                 else
                 {
+                    //display error message for a string that was not an integer
                     ClearInputBox();
-                    DisplayInputErrorMessage($"You must enter an interger value. Please try again.");
-                    DisplayInputBoxPrompt(prompt);
+                    DisplayInputErrorMessage($"You must enter an integer value. Please try again.");
+                    DisplayInputBoxPromptOrPressEscape(prompt);
                 }
             }
 
-            Console.CursorVisible = false;
-
+            //return true means we got an integer. the only other option is returning null, 
+            //which we only do if the user pressed Escape key (return null;) above
             return true;
         }
 
@@ -529,7 +572,7 @@ namespace TheBlackForest
             GetContinueKey();
 
             //
-            // get traveler's first name
+            // get trainee's first name
             //
             DisplayGamePlayScreen("Mission Initialization - FirstName", Text.InitializeMissionGetTraineeFirstName(), ActionMenu.MissionIntro, "");
             DisplayInputBoxPrompt("Enter your name: ");
@@ -543,7 +586,7 @@ namespace TheBlackForest
             trainee.LastName = GetString();
 
             //
-            // get traveler's age
+            // get trainee's age
             //
             DisplayGamePlayScreen("Mission Initialization - Age", Text.InitializeMissionGetTraineeAge(trainee), ActionMenu.MissionIntro, "");
             int gameTraineeAge;
@@ -552,7 +595,7 @@ namespace TheBlackForest
             trainee.Age = gameTraineeAge;
 
             //
-            // get traveler's race
+            // get trainee's race
             //
             DisplayGamePlayScreen("Mission Initialization - Race", Text.InitializeMissionGetTraineeRace(trainee), ActionMenu.MissionIntro, "");
             DisplayInputBoxPrompt($"Enter your race {trainee.FirstName}: ");
@@ -566,16 +609,9 @@ namespace TheBlackForest
             DisplayInputBoxPrompt($"Enter your laguage {trainee.FirstName}: ");
             trainee.Language = GetLanguage();
 
-            /*
-            //
-            //get trainee answer if they are immortal
-            //
-            DisplayGamePlayScreen("Mission Initialization - is immortal", Text.InitializeMissionGetIsImmortal(trainee), ActionMenu.MissionIntro, "");
-            DisplayInputBoxPrompt("Enter your immortality status: ");
-            trainee.IsImmortal = Get; */
 
             //
-            // echo the traveler's info
+            // echo the trainee's info
             //
             DisplayGamePlayScreen("Mission Initialization - Complete", Text.InitializeMissionEchoTraineeInfo(trainee), ActionMenu.MissionIntro, "");
             GetContinueKey();
@@ -629,6 +665,14 @@ namespace TheBlackForest
             DisplayGamePlayScreen("Current Location", Text.LookAt(forestObjects), ActionMenu.MainMenu, "");
         }
 
+        public void DisplayListOfAllNpcObjects()
+        {
+            DisplayGamePlayScreen("List: Npc Objects", Text.ListAllNpcObjects(_blackForest.Npcs), ActionMenu.AdminMenu, "");
+        }
+
+        /// <summary>
+        /// Look around method
+        /// </summary>
         public void DisplayLookAround()
         {
             //
@@ -641,12 +685,21 @@ namespace TheBlackForest
             //
             List<ForestObjects> forestObjectsInCurrentBlackForestTimeLocation = _blackForest.GetForestObjectsByBlackForestTimeLocationId(_gameTrainee.BlackForestTimeLocationID);
 
+            //
+            // Get list of NPCs in current balck forest time location
+            //
+            List<Npc> npcsInCurrentBlackForestTimeLocation = _blackForest.GetNpcsByBlackForestLocationId(_gameTrainee.BlackForestTimeLocationID);
+
             string messageBoxText = Text.LookAround(currentForestTimeLocation) + Environment.NewLine + Environment.NewLine;
-            messageBoxText += Text.ForestObjectsChooseList(forestObjectsInCurrentBlackForestTimeLocation);
+            messageBoxText += Text.ForestObjectsChooseList(forestObjectsInCurrentBlackForestTimeLocation) + Environment.NewLine;
+            messageBoxText += Text.NpcsChooseList(npcsInCurrentBlackForestTimeLocation);
 
             DisplayGamePlayScreen("Current Location", messageBoxText, ActionMenu.MainMenu, "");
         }
 
+        /// <summary>
+        /// Displaying the look around option for the trainee
+        /// </summary>
         public int DisplayGetForestObjectsToLookAt()
         {
             int forestObjecstId = 0;
@@ -664,7 +717,7 @@ namespace TheBlackForest
                 while (!validForestObjectsId)
                 {
                     //
-                    // Get an interger fromthe player
+                    // Get an interger from the player
                     //
                     GetInteger($"Enter the Id number of the object you wish to look at: ", 0, 0, out forestObjecstId);
 
@@ -689,6 +742,9 @@ namespace TheBlackForest
             return forestObjecstId;
         }
 
+        /// <summary>
+        /// Trainee object to pick up inventory
+        /// </summary>
         public int DisplayGetTraineeObjectToPickUp()
         {
             int forestObjectsId = 0;
@@ -741,6 +797,9 @@ namespace TheBlackForest
             return forestObjectsId;
         }
 
+        /// <summary>
+        /// Displaying the trainee inventory object to put down
+        /// </summary>
         public int DisplayGetTraineeInventoryObjectToPutDown()
         {
             int traineeObjectId = 0;
@@ -785,6 +844,9 @@ namespace TheBlackForest
             return traineeObjectId;
         }
 
+        /// <summary>
+        /// Trainee's locations that visited
+        /// </summary>
         public void DisplayLocationsVisited()
         {
             List<ForestTimeLocation> visitedBlackForestTimeLocations = new List<ForestTimeLocation>();
@@ -793,9 +855,12 @@ namespace TheBlackForest
                 visitedBlackForestTimeLocations.Add(_blackForest.GetBlackForestTimeLocationById(forestTimeLocationId));
             }
 
-            DisplayGamePlayScreen("Forest Time Locations Visited", Text.VisitedLocations(visitedBlackForestTimeLocations), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Forest Time Locations Visited", Text.VisitedLocations(visitedBlackForestTimeLocations), ActionMenu.TraineeMenu, "");
         }
 
+        /// <summary>
+        ///  Displaying the Forest time location 
+        /// </summary>
         public int DisplayGetNextForestTimeLocation()
         {
             int forestTimeLocationId = 0;
@@ -833,6 +898,124 @@ namespace TheBlackForest
 
             return forestTimeLocationId;
         }
+
+        /// <summary>
+        /// display get the NPC to talk to
+        /// </summary>
+        /// <returns>NPC Id</returns>
+        public int DisplayGetNpcToTalkTo()
+        {
+            int npcId = 0;
+            bool validNpcId = false;
+
+            //
+            // get a list of NPCs in the current space-time location
+            //
+            List<Npc> npcsInBlackForestTimeLocation = _blackForest.GetNpcsByBlackForestLocationId(_gameTrainee.BlackForestTimeLocationID);
+
+            if (npcsInBlackForestTimeLocation.Count > 0)
+            {
+                DisplayGamePlayScreen("Choose Character to Speak With", Text.NpcsChooseList(npcsInBlackForestTimeLocation), ActionMenu.NpcMenu, "");
+
+                while (!validNpcId)
+                {
+                    //
+                    // get an integer from the player
+                    //
+                    GetInteger($"Enter the Id number of the character you wish to speak with: ", 0, 0, out npcId);
+
+                    //
+                    // validate integer as a valid NPC id and in current location
+                    //
+                    if (_blackForest.IsValidNpcByLocationId(npcId, _gameTrainee.BlackForestTimeLocationID))
+                    {
+                        Npc npc = _blackForest.GetNpcById(npcId);
+                        if (npc is ISpeak)
+                        {
+                            validNpcId = true;
+                        }
+                        else
+                        {
+                            ClearInputBox();
+                            DisplayInputErrorMessage("It appears this character has nothing to say. Please try again.");
+                        }
+                    }
+                    else
+                    {
+                        ClearInputBox();
+                        DisplayInputErrorMessage("It appears you entered an invalid NPC id. Please try again.");
+                    }
+                }
+            }
+            else
+            {
+                DisplayGamePlayScreen("Choose Character to Speak With", "It appears there are no NPCs here.", ActionMenu.NpcMenu, "");
+            }
+
+            return npcId;
+        }
+
+        /// <summary>
+        /// Screen display to talk to the character
+        /// </summary>
+        public void DisplayTalkTo(Npc npc)
+        {
+            ISpeak speakingNpc = npc as ISpeak;
+
+            string message = speakingNpc.Speak();
+            
+            if(message == "")
+            {
+                message = "It appears this charater has nothing to say. Please try again.";
+            }
+
+            DisplayGamePlayScreen("Speak to Character", message, ActionMenu.NpcMenu, "");
+        }
+
+        /// <summary>
+        /// the input box message when you are giving the user the option to press escape to cancel
+        /// </summary>
+        /// <param name="prompt"></param>
+        public void DisplayInputBoxPromptOrPressEscape(string prompt)
+        {
+            prompt += " (or press Escape to cancel): ";
+            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 1);
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            Console.Write(prompt);
+            Console.CursorVisible = true;
+        }
+
+        /// <summary>
+        /// clears input box in case it contains a wrong choice from last time
+        /// </summary>
+        public void ClearInputBoxUserInputOnly()
+        {
+            string backgroundColorString = new String(' ', ConsoleLayout.InputBoxWidth - 4);
+
+            Console.ForegroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            for (int row = 1; row < ConsoleLayout.InputBoxHeight - 2; row++)
+            {
+                Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + row);
+                DisplayInputBoxPrompt(backgroundColorString);
+            }
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+        }
+
+        /// <summary>
+        /// the input box message when you are giving the user the option to press escape to cancel, and
+        /// when they have already typed something onto the screen that you want to display back to them
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <param name="usersChoice"></param>
+        public void DisplayInputBoxPromptOrPressEscape(string prompt, string usersChoice)
+        {
+            prompt += " (or press Escape to cancel): " + usersChoice;
+            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 1);
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            Console.Write(prompt);
+            Console.CursorVisible = true;
+        }
+
 
         #endregion
         #endregion

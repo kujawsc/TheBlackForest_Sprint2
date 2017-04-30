@@ -52,6 +52,10 @@ namespace TheBlackForest
 
             #region Initialize Mission Text
 
+            /// <summary>
+            /// Intialize the Mission Intro
+            /// </summary>
+            /// <returns>Intialize</returns>
             public static string InitializeMissionIntro()
             {
                 string messageBoxText =
@@ -64,6 +68,10 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// Initialize to get the trainee name
+        /// </summary>
+        /// <returns></returns>
             public static string InitializeMissionGetTraineeFirstName()
             {
                 string messageBoxText =
@@ -74,10 +82,15 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-            public static string InitializeMissionGetTraineeAge(Trainee gameTraveler)
+        /// <summary>
+        /// Get trainee age
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <returns></returns>
+            public static string InitializeMissionGetTraineeAge(Trainee gameTrainee)
             {
                 string messageBoxText =
-                    $"Very good then, we will call you {gameTraveler.FirstName} {gameTraveler.LastName} on this mission.\n" +
+                    $"Very good then, we will call you {gameTrainee.FirstName} {gameTrainee.LastName} on this mission.\n" +
                     " \n" +
                     "Enter your age below.\n" +
                     " \n" +
@@ -85,11 +98,16 @@ namespace TheBlackForest
 
                 return messageBoxText;
             }
-
-            public static string InitializeMissionGetTraineeRace(Trainee gameTraveler)
+        
+        /// <summary>
+        /// Get trainee race
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <returns></returns>
+            public static string InitializeMissionGetTraineeRace(Trainee gameTrainee)
             {
                 string messageBoxText =
-                    $"{gameTraveler.FirstName}{gameTraveler.LastName}, it will be important for us to know your race on this mission.\n" +
+                    $"{gameTrainee.FirstName}{gameTrainee.LastName}, it will be important for us to know your race on this mission.\n" +
                     " \n" +
                     "Enter your race below.\n" +
                     " \n" +
@@ -111,6 +129,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// Get trainee last name
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <returns></returns>
             public static string InitializeMissionGetTranieeLastName(Trainee gameTrainee)
             {
                 string messageBoxText =
@@ -120,12 +143,17 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-            public static string InitializeMissionGetTraineeLanguage(Trainee gameTraveler)
+        /// <summary>
+        /// Get trainee languge
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <returns></returns>
+            public static string InitializeMissionGetTraineeLanguage(Trainee gameTrainee)
             {
                 string messageBoxText =
-                    $"{gameTraveler.FirstName}{gameTraveler.LastName}, it will be important for us to know your language on this mission.\n" +
+                    $"{gameTrainee.FirstName}{gameTrainee.LastName}, it will be important for us to know your language for you background, but the mission will still be in English.\n" +
                     " \n" +
-                    "Enter your language below.\n" +
+                    "Enter your background language below.\n" +
                     " \n" +
                     "Please use the universal language classifications below." +
                     " \n";
@@ -145,15 +173,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
-            /*public static string InitializeMissionGetIsImmortal(Trainee gameTrainer)
-            {
-                string messageBoxText =
-                    "Are you immortal?\n" +
-                    "\n" +
-                    "Please answer the question for mission records.";
-                return messageBoxText;
-            }*/
-
+        /// <summary>
+        /// Getting the Echo trainee info
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <returns></returns>
             public static string InitializeMissionEchoTraineeInfo(Trainee gameTrainee)
             {
                 string messageBoxText =
@@ -167,7 +191,6 @@ namespace TheBlackForest
                     $"\tTrainee Age: {gameTrainee.Age}\n" +
                     $"\tTrainee Race: {gameTrainee.Race}\n" +
                     $"\tTrainee Language: {gameTrainee.Language}\n" +
-                    /*$"\tTrainee is immortal: {gameTrainee.IsImmortal}\n" + */
                     " \n" +
                     "Press any key to begin your mission.";
 
@@ -180,6 +203,12 @@ namespace TheBlackForest
 
             #region MAIN MENU ACTION SCREENS
 
+        /// <summary>
+        /// Trainee Info
+        /// </summary>
+        /// <param name="gameTrainee"></param>
+        /// <param name="currentLocation"></param>
+        /// <returns></returns>
             public static string TraineeInfo(Trainee gameTrainee, ForestTimeLocation currentLocation)
             {
             string messageBoxText =
@@ -194,6 +223,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// The list for the black forest location
+        /// </summary>
+        /// <param name="forestTimeLocations"></param>
+        /// <returns></returns>
             public static string ListAllBlackForestLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
             {
             string messageBoxText =
@@ -223,6 +257,11 @@ namespace TheBlackForest
             return messageBoxText;
         }
 
+        /// <summary>
+        /// The current look around 
+        /// </summary>
+        /// <param name="forestTimeLocation"></param>
+        /// <returns></returns>
         public static string LookAround(ForestTimeLocation forestTimeLocation)
             {
                 string messageBoxText =
@@ -233,6 +272,12 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// Trainee traveling options
+        /// </summary>
+        /// <param name="gametrainee"></param>
+        /// <param name="forestTimeLocations"></param>
+        /// <returns></returns>
             public static string Travel(Trainee gametrainee, List<ForestTimeLocation> forestTimeLocations)
             {
                 string messageBoxText =
@@ -268,6 +313,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// Status box list for the trainee
+        /// </summary>
+        /// <param name="trainee"></param>
+        /// <returns></returns>
         public static List<string> StatusBox(Trainee trainee)
         {
             List<string> statusBoxText = new List<string>();
@@ -276,6 +326,12 @@ namespace TheBlackForest
 
             return statusBoxText;
         }
+
+        /// <summary>
+        /// The main current location when is the trainee 
+        /// </summary>
+        /// <param name="forestTimeLocation"></param>
+        /// <returns></returns>
         public static string CurrentLocationInfo(ForestTimeLocation forestTimeLocation)
             {
                 string messageBoxText =
@@ -286,6 +342,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// Trainee visited location
+        /// </summary>
+        /// <param name="forestTimeLocations"></param>
+        /// <returns></returns>
             public static string VisitedLocations(IEnumerable<ForestTimeLocation> forestTimeLocations)
             {
                 string messageBoxText =
@@ -315,6 +376,11 @@ namespace TheBlackForest
                 return messageBoxText;
             }
 
+        /// <summary>
+        /// The forest lsit of objects
+        /// </summary>
+        /// <param name="forestObjects"></param>
+        /// <returns></returns>
         public static string ListAllForestObjects(IEnumerable<ForestObjects> forestObjects)
         {
             //
@@ -352,6 +418,12 @@ namespace TheBlackForest
             return messageBoxText;
         }
 
+        /// <summary>
+        /// List Black Forest Location Objects By Black Forest Time  Location
+        /// </summary>
+        /// <param name="blackForestTimeLocationId"></param>
+        /// <param name="forestObjects"></param>
+        /// <returns></returns>
         public static string ListBlackForestLocationObjectsByBlackForestTimeLocation(int blackForestTimeLocationId, IEnumerable<ForestObjects> forestObjects)
         {
             //
@@ -396,6 +468,12 @@ namespace TheBlackForest
 
             return messageBoxText;
         }
+
+        /// <summary>
+        /// The list of what the trainee is looking
+        /// </summary>
+        /// <param name="forestObjects"></param>
+        /// <returns></returns>
         public static string LookAt(ForestObjects forestObjects)
         {
             string messageBoxText = "";
@@ -428,6 +506,11 @@ namespace TheBlackForest
             return messageBoxText;
         }
 
+        /// <summary>
+        /// The choose list for the forest 
+        /// </summary>
+        /// <param name="forestObjects"></param>
+        /// <returns></returns>
         public static string ForestObjectsChooseList(IEnumerable<ForestObjects> forestObjects)
         {
             //
@@ -462,6 +545,11 @@ namespace TheBlackForest
             return messageBoxText;
         }
 
+        /// <summary>
+        /// The current invetory the trainee has
+        /// </summary>
+        /// <param name="traineeInventory"></param>
+        /// <returns></returns>
         public static string CurrentInventory (IEnumerable<TraineeObject> traineeInventory)
         {
             string messageBoxText = "";
@@ -498,6 +586,11 @@ namespace TheBlackForest
 
         }
 
+        /// <summary>
+        /// The trainee inventory list
+        /// </summary>
+        /// <param name="traineeInventory"></param>
+        /// <returns></returns>
         public static string CurrentTraineeInventory(IEnumerable<TraineeObject> traineeInventory)
         {
             string messageBoxText = "";
@@ -532,8 +625,97 @@ namespace TheBlackForest
 
             return messageBoxText;
         }
+
+        /// <summary>
+        /// The lsit of all NPC
+        /// </summary>
+        /// <param name="npcObjects"></param>
+        /// <returns></returns>
+        public static string ListAllNpcObjects(IEnumerable<Npc> npcObjects)
+        {
+            //
+            // display table name and column headers
+            //
+            string messageBoxText =
+                "NPC Objects\n" +
+                " \n" +
+
+                //
+                // display table header
+                //
+                "ID".PadRight(10) +
+                "Name".PadRight(30) +
+                "Black Forest Time Location Id".PadRight(10) + "\n" +
+                "---".PadRight(10) +
+                "----------------------".PadRight(30) +
+                "----------------------".PadRight(10) + "\n";
+
+            //
+            // display all npc objects in rows
+            //
+            string npcObjectRows = null;
+            foreach (Npc npcObject in npcObjects)
+            {
+                npcObjectRows +=
+                    $"{npcObject.Id}".PadRight(10) +
+                    $"{npcObject.FirstName}".PadRight(30) +
+                    $"{npcObject.BlackForestTimeLocationID}".PadRight(10) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += npcObjectRows;
+
+            return messageBoxText;
+        }
+
+        /// <summary>
+        /// Choose list of NPC
+        /// </summary>
+        /// <param name="npcs"></param>
+        /// <returns></returns>
+        public static string NpcsChooseList(IEnumerable<Npc> npcs)
+        {
+            //
+            // display table name and column headers
+            //
+            string messageBoxText =
+                "NPCs\n" +
+                " \n" +
+
+                //
+                // display table header
+                //
+                "ID".PadRight(10) +
+                "Name".PadRight(30) + "\n" +
+                "---".PadRight(10) +
+                "----------------------".PadRight(30) + "\n";
+
+            //
+            // display all NPCs in rows
+            //
+            string npcRows = null;
+            foreach (Npc npc in npcs)
+            {
+                npcRows +=
+                    $"{npc.Id}".PadRight(10) +
+                    $"{npc.FirstName}".PadRight(30) +
+                    Environment.NewLine;
+            }
+
+            messageBoxText += npcRows;
+
+            return messageBoxText;
+        }
+
+
         #endregion
 
+        /// <summary>
+        /// Status box tex
+        /// </summary>
+        /// <param name="trainee"></param>
+        /// <param name="blackForest"></param>
+        /// <returns></returns>
         public static List<string> StatusBox(Trainee trainee, BlackForest blackForest)
         {
             List<string> statusBoxText = new List<string>();
